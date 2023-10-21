@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Poppins:wght@600&display=swap');
+@import url("all.css");
+
+nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 5.5rem;
+    background-color: #141414;
+    color: white;
+
+}
+
+#profile {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    align-items: center;
+}
+
+#logo {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 100%;
+    margin-left: 2rem;
+    margin-right: 1rem;
+}
+
+#profile p {
+    font-size: 1.5rem;
+}
+
+#links {
+    width: 50%;
+}
+
+#links a {
+    text-decoration: none;
+    color: white;
+    float: right;
+    margin-right: 3rem;
+}
+
+#section1 {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: max-content;
+}
+
+#signing {
+    display: flex;
+    flex-direction: row;
+    width: 98%;
+    /* background-color: aqua; */
+}
+
+#secPic {
+    display: flex;
+    flex-direction: row;
+    height: max-content;
+    width: 70%;
+}
+
+#secPic img {
+    width: 100%;
+    height: auto;
+    border-bottom-left-radius: 1.5rem;
+    border-top-left-radius: 1.5rem;
+}
+
+#sign {
+    width: 30%;
+    border-top-right-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+}
+
+#logSelection {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 10%;
+    justify-content: center;
+}
+
+#signup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    text-align: center;
+    background-color: none;
+    color: white;
+    border-top-right-radius: 1.5rem;
+    border-top-left-radius: 1.5rem;
+}
+
+#signin {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    text-align: center;
+    background-color: white;
+    border-top-right-radius: 1.5rem;
+    /* border-top-left-radius: 1.5rem; */
+
+}
+#signin:hover{
+    cursor: pointer;
+}
+#signup:hover{
+    cursor: pointer;
+}
+
+#logContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    height: 90%;
+    border-bottom-right-radius: 1.5rem;
+}
+
+#logContent h1 {
+    font-size: 1.5rem;
+    margin: 1rem;
+    margin-bottom: 3rem;
+}
+#logContent span{
+    background-image: linear-gradient(to right, rgb(215, 0, 183), darkorchid);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    display: flex;
+    flex-direction: row;
+    font-size: 1rem;
+    width: 70%;
+    margin: 1.5rem;
+    font-family: "Poppins";
+    border: none;
+    border-bottom: 0.2rem solid black;
+    border-image: linear-gradient(to right, rgb(215, 0, 183), darkorchid) 1;
+    outline: none;
+}
+
+#subBtn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 30rem;
+    background-image:linear-gradient(to right, rgb(215, 0, 183), darkorchid);
+    margin: 1.5rem;
+    width: 65%;
+    color: white;
+    cursor: pointer;
+}
+#links a:hover{
+    /* background-image: linear-gradient(to right, rgb(215, 0, 183), darkorchid); */
+    background-image: linear-gradient(to right, rgb(215, 0, 183), darkorchid);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    /* background-clip: text;
+    -webkit-background-clip: text; */
+}

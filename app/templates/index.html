@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KalpRaag : A Music Screaming Platform</title>
+    <link rel="stylesheet" href="../static/styles/index.css">
+    <link rel="icon" href="../static/images/KalpRaag Logo Rounded.png">
+</head>
+
+<body>
+    <nav id="navbar">
+        <div id="profile">
+            <img src="../static/images/KalpRaag Logo.png" alt="KalpRaag Logo" id="logo">
+            <p>Kalp Raag</p>
+            <!-- <p>Kalp राग</p> -->
+        </div>
+        <div id="links">
+            <a href="#">Admin Signin</a>
+        </div>
+    </nav>
+    <!-- <hr> -->
+    <section id="section1">
+        <div id="signing">
+            <div id="secPic">
+                <img src="../static/images/front page pic rem.png" alt="">
+            </div>
+            <div id="sign">
+                <div id="logSelection">
+                    <div id="signin" onclick="signin()">Sign In</div>
+                    <div id="signup" onclick="signup()">Sign Up</div>
+                </div>
+                <div id="logContent">
+                    <h1 id="loggerHead">Welcome Back to the <span>Raag!!</span></h1>
+                    <form action="/signin" method="POST" id="logger">
+                        <input type="text" name="name" id="name" placeholder="Username">
+                        <input type="text" name="password" id="password" placeholder="Password">
+                        <input type="submit" value="CONTINUE" id="subBtn">
+                    </form>
+                    <p id="messenger">{{ message }}</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+    <script src="../static/scripts/index.js"></script>
+</body>
+
+</html>
