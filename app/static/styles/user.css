@@ -1,3 +1,7 @@
+*{
+    margin: 0rem;
+    padding: 0rem;
+}
 #profile{
     width:20%;
 }
@@ -57,4 +61,50 @@
 }
 #links{
     width: 15%;
+}
+
+#mainBody{
+    display: flex;
+    flex-direction: row;
+    height: 78vh;
+    width: 100%;
+    background-color: aqua;
+    /* overflow: scroll; */
+    /* overflow-x: hidden; */
+    top: 5.5rem;
+    position: fixed;
+}
+body{
+    display: flex;
+    flex-direction: column;
+}
+#navigator{
+    display: flex;
+    flex-direction: column;
+    height: 78;
+    width: 20%;
+    background-color: rgb(127, 255, 142);
+}
+#musicBody{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 78vh;
+    width: 80%;
+    /* overflow: auto; */
+    /* overflow-x:scroll; */
+    overflow-y: scroll;
+}
+#musicPlayer{
+    height: 10vh;
+    width: 100%;
+    background-color: aquamarine;
+    top: 89.8vh;
+    position: fixed;
+}
+.spacer{
+    height: 5rem;
+    margin: 3rem;
+    background-color: brown;
+    width: 100%;
 }
