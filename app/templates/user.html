@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="../static/styles/user.css">
     <link rel="icon" href="../static/images/KalpRaag Logo Rounded.png">
 </head>
+
 <body>
     <nav id="navbar">
         <div id="profile">
@@ -23,25 +25,42 @@
                 <div id="type">
                     <input type="text" name="search" id="typeIn" placeholder="What's on your mind today?">
                 </div>
-                
+
             </div>
-            
+
         </div>
         <div id="links">
             <a href="#">Become a Creator</a>
         </div>
     </nav>
     <hr>
-    <section id="mainBody">
+    <section id="main">
         <div id="navigator">
 
         </div>
         <div id="musicBody">
-            <div class="spacer"></div>
-            <div class="spacer"></div>
-            <div class="spacer"></div>
-            <div class="spacer"></div>
-            <div class="spacer"></div>
+            <div id="musicContainer">
+                {% for i in allSongs %}
+                    <div class="music">
+                        <div class="musicImg"> {{ i["song_name"][0]|upper }}</div>
+                        <div class="musicContent">
+                            <p class="musicName">{{ i["song_name"]|upper }}</p>
+                            <p class="musicDesc">{{ i["artist_id"] }}</p>
+                            {% set dur = i["duration"] %}
+                            {% set min = (dur//60) %}
+                            {% set sec = (dur%60) %}
+                            {% if min < 10 %}
+                                {% set min = ("0" + min|string) %}
+                            {% endif %}
+                            {% if sec < 10 %}
+                                {% set sec = ("0" + sec|string) %}
+                            {% endif %}
+                            <p class="musicDesc">{{ min }}:{{ sec }}</p>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </section>
     <section id="musicPlayer">
@@ -49,4 +68,5 @@
     </section>
     <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
 </body>
+
 </html>

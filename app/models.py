@@ -12,3 +12,10 @@ class Users(db.Model):
 class Songs(db.Model):
     song_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     song_name = db.Column(db.String, nullable=False)
+    lyrics_id = db.Column(db.Integer, nullable=False)
+    duration = db.Column(db.Integer, nullable=False)
+    creator_id = db.Column(db.Integer, nullable=False)
+    artist_id = db.Column(db.Integer, nullable=False)
+    playlist_in = db.Column(db.Integer, nullable=False)
+    album_in = db.Column(db.Integer, nullable=False)
+    date_created = db.Column(db.String, nullable=False)

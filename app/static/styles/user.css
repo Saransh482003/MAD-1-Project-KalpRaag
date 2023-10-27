@@ -45,7 +45,7 @@
     /* justify-content: center; */
     /* align-items: center; */
     width: 90%;
-    background-color: aqua;
+    /* background-color: aqua; */
     border-top-right-radius: 3rem;
     border-bottom-right-radius: 3rem;
 }
@@ -63,37 +63,35 @@
     width: 15%;
 }
 
-#mainBody{
+#main{
     display: flex;
     flex-direction: row;
     height: 78vh;
     width: 100%;
-    background-color: aqua;
-    /* overflow: scroll; */
-    /* overflow-x: hidden; */
+    /* background-color: black; */
     top: 5.5rem;
     position: fixed;
-}
-body{
-    display: flex;
-    flex-direction: column;
+    background-image: linear-gradient(180deg,#141414,rgb(215, 0, 183));
 }
 #navigator{
     display: flex;
     flex-direction: column;
-    height: 78;
+    height: 78vh;
     width: 20%;
     background-color: rgb(127, 255, 142);
 }
 #musicBody{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 78vh;
+    /* display: flex;
+    flex-direction: column; */
+    align-items: center; 
+    height: 100%;
     width: 80%;
-    /* overflow: auto; */
-    /* overflow-x:scroll; */
-    overflow-y: scroll;
+    /* flex-wrap: wrap ; */
+    overflow: hidden;
+    overflow-y: auto;
+    /* background-image: linear-gradient(180deg,#141414,rgb(88, 1, 93)); */
+    /* border-radius: 3rem; */
+    /* overflow-x: hidden; */
 }
 #musicPlayer{
     height: 10vh;
@@ -102,9 +100,64 @@ body{
     top: 89.8vh;
     position: fixed;
 }
-.spacer{
-    height: 5rem;
-    margin: 3rem;
-    background-color: brown;
+#musicContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
     width: 100%;
+    height: 100%;
+    /* background-color: azure; */
+}
+.music{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 1rem;
+    width: 13rem;
+    height: 17rem;
+    background-color: transparent;
+    border-radius: 1rem;
+    z-index: 0;
+}
+.music::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha (fourth) value for the desired level of transparency */
+    border-radius: 1rem;
+    z-index: -1;
+    /* background-color: aqua; */
+
+}
+.musicImg{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* margin-top: 1rem; */
+    color: white;
+    height: 60%;
+    width: 90%;
+    font-family: "Chopin";
+    text-align: center;
+    font-weight: 600;
+    font-size: 5rem;
+    
+    /* background-color:antiquewhite; */
+    z-index: 1;
+}
+.musicContent{
+    height: 40%;
+    width: 90%;
+    font-size: 1.1rem;
+    /* background-color: aliceblue; */
+}
+.musicDesc{
+    font-size: 0.9rem;
+    color: #141414;
 }

@@ -2,8 +2,8 @@ from flask import Blueprint, jsonify
 from flask_restful import Api, Resource, marshal_with, reqparse, fields, abort
 from app.models import db, Users
 
-api_bp = Blueprint("api",__name__)
-api = Api(api_bp)
+api_user = Blueprint("api_u",__name__)
+api_u = Api(api_user)
 
 returner = {
     "user_id":fields.Integer,
@@ -65,4 +65,4 @@ class userTransaction(Resource):
         db.session.commit()
         return fetcher, 200
     
-api.add_resource(userTransaction,"/user/<int:user_id>","/user","/user/<user_name>/<user_password>")
+api_u.add_resource(userTransaction,"/<int:user_id>","/","/<user_name>/<user_password>")

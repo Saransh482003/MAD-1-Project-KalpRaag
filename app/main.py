@@ -1,6 +1,11 @@
 from app import app
 from flask import render_template, request, redirect
 import requests
+from faker import Faker
+import random
+from app.models import db, Songs
+from faker import Faker
+import random
 # from .models import Users
 
 @app.route("/")
@@ -35,6 +40,28 @@ def signin():
     
 @app.route("/user/<user_name>")
 def home(user_name):
-    return render_template("user.html")
+    url = f"http://127.0.0.1:5000/api/songs"
+    response = requests.get(url).json()
+    
+    return render_template("user.html",allSongs=response)
+
+@app.route("/songpopulator")
+def singer():
+
+    fake = Faker()
+    for _ in range(50):
+        song = Songs(
+            song_name=fake.word(),
+            lyrics_id=random.randint(1, 100),
+            duration=random.randint(1, 300),
+            creator_id=random.randint(1, 100),
+            artist_id=random.randint(1, 100),
+            playlist_in=random.randint(1, 100),
+            album_in=random.randint(1, 100),
+            date_created=fake.word(),
+        )
+        db.session.add(song)
+    db.session.commit()
+
 if __name__=="__main__":
     app.run(debug=True)
