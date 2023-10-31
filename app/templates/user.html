@@ -31,13 +31,16 @@
 
         </div>
         <div id="links">
-            <a href="#">Become a Creator</a>
+            <a href="#" class="link">Become a Creator</a>
+            <a href="/">Logout</a>
         </div>
     </nav>
     <hr>
     <section id="main">
         <div id="navigator">
-
+            <div id="nav">
+                
+            </div>
         </div>
         <div id="musicBody">
             <div id="musicContainer">
@@ -57,10 +60,6 @@
                         <div class="controlBtn update-content-link" data-song-id="{{i['song_id']}}">
                             <img src="../static/images/play.png" alt="Play" class="control">
                         </div>
-
-                        <!-- <a href="./{{user_name}}/play?song_id={{i['song_id']}}" class="controlBtn">
-                            <img src="../static/images/play.png" alt="Play" class="control">
-                        </a> -->
                     </div>
                 </div>
                 {% endfor %}
@@ -70,7 +69,7 @@
     <section id="musicPlayer">
         <div id="musicDetails">
             <div id="musicImgBottom">
-                
+
 
             </div>
             <div id="musicContentBottom">
@@ -92,6 +91,9 @@
                 </a>
             </div>
             <div id="controlers">
+                <div id="controlBack">
+                    <img src="../static/images/back.png" alt="Play" id="musicBarControlBack">
+                </div>
                 <div id="controler">
                     <img src="../static/images/play.png" alt="Play" id="musicBarControl">
                 </div>
