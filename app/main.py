@@ -5,8 +5,8 @@ from faker import Faker
 import random
 from app.models import db, Songs
 from faker import Faker
-import random
-# from .models import Users
+
+USERNAME = ""
 
 @app.route("/")
 def index():
@@ -42,8 +42,19 @@ def signin():
 def home(user_name):
     url = f"http://127.0.0.1:5000/api/songs"
     response = requests.get(url).json()
-    
-    return render_template("user.html",allSongs=response)
+    return render_template("user.html",allSongs=response,user_name=user_name,data=None)
+
+@app.route("/update-section")
+def musicPlayer():
+    song_id = request.args.get('song_id')
+    url = f"http://127.0.0.1:5000/api/songs?id={song_id}"
+    response = requests.get(url).json()
+    # urlAll = f"http://127.0.0.1:5000/api/songs"
+    # responseAll = requests.get(urlAll).json()
+    # song_name = response["song_name"]
+    # artist = response["artist_id"] 
+    # duration = response["duration"]
+    return response
 
 @app.route("/songpopulator")
 def singer():
