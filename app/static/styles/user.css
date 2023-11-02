@@ -67,9 +67,14 @@
     width: 20%;
     height: 100%;
 }
+#links a{
+    margin-right: 1.5rem;
+    margin-left: 1.5rem;
+}
 .link{
     margin: 0rem;
 }
+
 #main{
     display: flex;
     flex-direction: row;
@@ -87,8 +92,9 @@
     align-items: center;
     height: 78vh;
     width: 20%;
-    background-color: transparent;
-    border-right: 0.2rem solid white;
+    background-color: #141414;
+    background-image: linear-gradient(180deg,#141414,black);
+    /* border-right: 0.2rem solid white; */
     /* position: relative; */
 }
 #nav{
@@ -289,10 +295,7 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    /* width: 30%; */
     width: max-content;
-    /* background-color: aquamarine; */
-    /* width: 10rem; */
     z-index: 11;
 }
 #lyricsCont{
@@ -318,7 +321,7 @@
 #lyrics:hover{
     box-shadow: 0 0 1.25rem 0.35rem rgba(215, 0, 183, 0.7);;
 }
-#controler{
+.controlerCont{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -330,39 +333,12 @@
     border-radius: 100%;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
-    /* margin-bottom: 0.5rem; */
 }
-#musicBarControl{
+.controlers{
     width: auto;
     height: 50%;
     transition: all 0.15s ease-out;
 }
-#controler:hover #musicBarControl{
+.controlerCont:hover .controlers{
     -webkit-filter: drop-shadow(0rem 0rem 0.75rem rgba(215, 0, 183, 0.7));
-}
-#controlBack{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 3rem;
-    width: 3rem;
-    cursor: pointer;
-    background-color: #272727;;
-    border-radius: 100%;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    /* margin-bottom: 0.5rem; */
-}
-#musicBarControlBack{
-    width: auto;
-    height: 50%;
-    transition: all 0.15s ease-out;
-}
-#controlBack:hover #musicBarControlBack{
-    -webkit-filter: drop-shadow(0rem 0rem 0.75rem rgba(215, 0, 183, 0.7));
-}
-#links a{
-    margin-right: 1.5rem;
-    margin-left: 1.5rem;
 }

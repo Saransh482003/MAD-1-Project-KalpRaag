@@ -42,7 +42,9 @@ def signin():
 def home(user_name):
     url = f"http://127.0.0.1:5000/api/songs"
     response = requests.get(url).json()
-    return render_template("user.html",allSongs=response,user_name=user_name,data=None)
+    user_name = "%20".join(user_name.split(" "))
+    # print(user_name)
+    return render_template("user.html",allSongs=response,user_name=user_name)
 
 @app.route("/update-section")
 def musicPlayer():
