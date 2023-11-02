@@ -43,7 +43,6 @@ def home(user_name):
     url = f"http://127.0.0.1:5000/api/songs"
     response = requests.get(url).json()
     user_name = "%20".join(user_name.split(" "))
-    # print(user_name)
     return render_template("user.html",allSongs=response,user_name=user_name)
 
 @app.route("/update-section")
@@ -51,18 +50,20 @@ def musicPlayer():
     song_id = request.args.get('song_id')
     url = f"http://127.0.0.1:5000/api/songs?id={song_id}"
     response = requests.get(url).json()
-    # urlAll = f"http://127.0.0.1:5000/api/songs"
-    # responseAll = requests.get(urlAll).json()
-    # song_name = response["song_name"]
-    # artist = response["artist_id"] 
-    # duration = response["duration"]
     return response
 
 @app.route("/user/<user_name>/lyrics")
 def lyricist(user_name):
     song_id = request.args.get("song_id")
     time = request.args.get("current_time")
-    return render_template("readLyrics.html",song_id=song_id,time=time)
+    paused = request.args.get("paused")
+    url = f"http://127.0.0.1:5000/api/songs?id={song_id}"
+    response = requests.get(url).json()
+    lyricsFetcher = f"http://127.0.0.1:5000/api/lyrics?song_id={song_id}"
+    lyricsData = requests.get(lyricsFetcher).json()
+    f = open(lyricsData["lyrics_path"],"r")
+    lines = f.readlines()
+    return render_template("readLyrics.html",song_id=song_id,time=time,paused=paused,response=response,lines=lines)
 
 
 @app.route("/songpopulator")

@@ -39,12 +39,8 @@ $(document).ready(function () {
 let lyrics = document.getElementById("lyrics")
 lyrics.addEventListener("click", ()=> {
     if (playClicked){
-        window.location.href =  `./${userName}/lyrics?song_id=${songId}&current_time=${audio.currentTime}`;
+        window.location.href =  `./${userName}/lyrics?song_id=${songId}&current_time=${audio.currentTime}&paused=${audio.paused}`;
     }
-
-    // console.log(`./${userName}/lyrics?song_id=${songId}&current_time=${audio.currentTime}`);
-
-    // alert(lyrics.href)
 })
 
 let musicBarPlayPause = document.getElementById("musicBarPlayPause")

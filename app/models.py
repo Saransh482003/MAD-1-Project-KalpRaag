@@ -19,3 +19,8 @@ class Songs(db.Model):
     playlist_in = db.Column(db.Integer, nullable=False)
     album_in = db.Column(db.Integer, nullable=False)
     date_created = db.Column(db.String, nullable=False)
+
+class Lyrics(db.Model):
+    lyrics_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    lyrics_path = db.Column(db.String, nullable=False)
+    song_id = db.Column(db.Integer, nullable=False)

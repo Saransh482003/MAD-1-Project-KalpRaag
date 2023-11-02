@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Poppins:wght@600&display=swap');
+@import url("all.css");
+
+.rect {
+    width: 80%;
+    margin-top: 1rem;
+    height: 3rem;
+    background-color: aqua;
+}
+
+#musicInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 78vh;
+    width: 20%;
+    /* background-color: #141414; */
+    /* background-image: linear-gradient(180deg,#141414,black); */
+}
+
+#musicBody {
+
+    width: 60%;
+}
+#musicBody h1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    padding-left: 1rem;
+    margin-left: 1rem;
+    width: 95%;
+    height: 3rem;
+    background-color: transparent;
+    position: relative;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+}
+#musicBody h1::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha (fourth) value for the desired level of transparency */
+    /* background-image: linear-gradient(180deg,#141414,rgb(215, 0, 183)); */
+    border-radius: 1rem;
+    z-index: -1;
+}
+
+::-webkit-scrollbar {
+    width: 0.75rem;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    position: relative;
+    border-radius: 0.375rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    position: absolute;
+    /* background-color: #555; */
+}
+
+.lyricLine{
+    width: 80%;
+    margin-left: 2rem;
+    color: white;
+}
