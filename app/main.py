@@ -58,6 +58,13 @@ def musicPlayer():
     # duration = response["duration"]
     return response
 
+@app.route("/user/<user_name>/lyrics")
+def lyricist(user_name):
+    song_id = request.args.get("song_id")
+    time = request.args.get("current_time")
+    return render_template("readLyrics.html",song_id=song_id,time=time)
+
+
 @app.route("/songpopulator")
 def singer():
 

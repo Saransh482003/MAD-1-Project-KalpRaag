@@ -21,13 +21,12 @@ $(document).ready(function () {
             audio.currentTime = 0
             audio.play()
         }
-        // alert()
         $.get('/update-section?song_id=' + songId, function (data) {
             $('#musicImgBottom').html(data["song_name"][0].toUpperCase());
             $('#musicNameBottom').html(data["song_name"][0].toUpperCase()+data["song_name"].slice(1,));
             $('#musicArtistBottom').html(data["artist_id"]);
             $('#musicDurationBottom').html(data["duration"]);
-            $('#lyrics').attr("href",`./${userName}/lyrics?song_id=${songId}`)
+            $('#lyrics').attr("href",`./${userName}/lyrics?song_id=${songId}&current_time=${audio.currentTime}`)
         });
     });
 });
@@ -42,6 +41,8 @@ playPause.addEventListener("click", ()=>{
         musicBarPlayPause.alt = "Pause"
         if (audio.paused){
             audio.play()
+            
+            console.log(audio.currentTime)
         }
     }
     else{
