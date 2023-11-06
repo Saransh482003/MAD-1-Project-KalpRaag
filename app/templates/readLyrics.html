@@ -43,29 +43,79 @@
 
         </div>
         <div id="musicBody">
-            <h1>Lyrics - 
-                {% if response["song_name"]|length > 72 %}
-                    {{response["song_name"][0:72]}}...
-                {% else %}
-                    {{response["song_name"]}}
-                {% endif %}
-            </h1>
+            <div id="musicHeader">
+                <h1>
+                    Lyrics - 
+                    {% if response["song_name"]|length > 60 %}
+                        {{response["song_name"][0:72]}}...
+                    {% else %}
+                        {{response["song_name"]}}
+                    {% endif %}
+                </h1>   
+                <div id="musicStats" data-rating={{rating|int}} data-songID={{response["song_id"]}} data-user={{user_name}}>
+
+                    {% for rate in range(0,5) %}
+                        {% if rate < rating | int %}
+                            <img src="../../static/images/full_star.png" alt={{rating}} id="star{{rate}}" class="star" title="Rated">
+                        {% else %}
+                            <img src="../../static/images/blank_star.png" alt={{rating}} id="star{{rate}}" class="star" title="Rate">
+                        {% endif %}                            
+                    {% endfor %}
+                    <p id="rating">{{rating}}</p>
+                    {% if love==0 %}
+                        <img src="../../static/images/blank_heart.png" alt="Like!!" id="love" data-love={{love}} title="Like">
+                    {% else %}
+                        <img src="../../static/images/full_heart.png" alt="Like!!" id="love" data-love={{love}} title="Like">
+                    {% endif %}
+
+                </div>
+            </div>
             {% for line in lines %}
-                <p class="lyricLine">{{line}}</p>
+                {% if line=='#spacex\n' %}
+                    <p class="lyricLine">&nbsp;</p>
+                {% else %}
+                    <p class="lyricLine">{{line}}</p>
+                {% endif %}
             {% endfor %}
 
         </div>
         <div id="musicInfo">
-            <div id="nav"></div>
+            <div id="nav">
+                <div id="infoContent">
+                    <div class="infoHeader">Song Details</div>
+                    <div id="infoContainer">
+                        <p class="info">Name: {{response["song_name"]}}</p>
+                        <p class="info">Artist: {{response["artist_id"]}}</p>
+                        {% set dur = response["duration"] %}
+                        {% set min = (dur//60) %}
+                        {% set sec = (dur%60) %}
+                        {% if min < 10 %} 
+                            {% set min=("0" + min|string) %} 
+                        {% endif %} 
+                        {% if sec < 10 %} 
+                            {% set sec=("0" + sec|string) %} 
+                        {% endif %}
+                        <p class="info">Duration: {{ min }}:{{ sec }}</p>
+                        <p class="info">Creator: {{response["creator_id"]}}</p>
+                        <p class="info">Date Created: {{response["date_created"]}}</p>
+                        <p class="info">Albums In:</p>
+                        {% for album in albums %}
+                            <p class="info">&emsp;{{loop.index+1}}. {{album}}</p>
+                        {% endfor %}
+                        <p class="info">Playlists In:</p>
+                        {% for playlist in playlists %}
+                            <p class="info">&emsp;{{loop.index+1}}. {{playlist}}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
 
         </div>
     </section>
     <section id="musicPlayer">
         <div id="musicDetails">
-            <div id="musicImgBottom">
-
-
-            </div>
+            <div id="musicImgBottom"></div>
             <div id="musicContentBottom">
                 <p id="musicNameBottom"></p>
                 <p id="musicArtistBottom"></p>
@@ -80,7 +130,7 @@
         </div>
         <div id="playBtns">
             <div id="lyricsCont">
-                <div id="lyrics">
+                <div id="lyrics" data-user={{user_name}}>
                     Go Back
                 </div>
             </div>

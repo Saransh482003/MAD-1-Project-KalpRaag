@@ -97,29 +97,7 @@
     /* border-right: 0.2rem solid white; */
     /* position: relative; */
 }
-#nav{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 95%;
-    width: 95%;
-    position: relative;
-}
-#nav::before{
-    content: "";
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 2rem;
-    background-color: #e6e6e6;
-    opacity: 0.5;
-    position: absolute;
-}
+
 #musicBody{
     align-items: center; 
     height: 100%;

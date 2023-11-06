@@ -24,3 +24,11 @@ class Lyrics(db.Model):
     lyrics_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lyrics_path = db.Column(db.String, nullable=False)
     song_id = db.Column(db.Integer, nullable=False)
+
+class Rating(db.Model):
+    s_no = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    song_id = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    love = db.Column(db.Integer, nullable=False)
+    user_name = db.Column(db.String,nullable=False)
+    __table_args__ = (db.UniqueConstraint('song_id', 'user_name', name='song_user_unique'),)

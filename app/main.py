@@ -1,9 +1,9 @@
 from app import app
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, jsonify
 import requests
 from faker import Faker
 import random
-from app.models import db, Songs
+from app.models import db, Songs, Rating
 from faker import Faker
 
 USERNAME = ""
@@ -63,12 +63,47 @@ def lyricist(user_name):
     lyricsData = requests.get(lyricsFetcher).json()
     f = open(lyricsData["lyrics_path"],"r")
     lines = f.readlines()
-    return render_template("readLyrics.html",song_id=song_id,time=time,paused=paused,response=response,lines=lines)
+    user_name = "%20".join(user_name.split(" "))
+    ratingFetcher = f"http://127.0.0.1:5000/api/rating?song_id={song_id}&user_name={user_name}"
+    ratingData = requests.get(ratingFetcher)
+    if ratingData.status_code==200:
+        rating=ratingData.json()["rating"]
+        love=ratingData.json()["love"]
+    else:
+        rating=0
+        love=0
+    return render_template("readLyrics.html",song_id=song_id,time=time,paused=paused,response=response,lines=lines,rating=rating,love=love,user_name=user_name)
+
+@app.route('/update-song-rating')
+def update_rating():
+    song_id = request.args.get("song_id")
+    rating = request.args.get("rating")
+    love = request.args.get("love")
+    user_name = request.args.get("user_name")
+    print(song_id,rating,user_name,love)
+
+    url = "http://127.0.0.1:5000/api/rating"
+    entry = {
+        "song_id":song_id,
+        "rating":rating,
+        "love":love,
+        "user_name":user_name,
+    }
+    response = requests.post(url, json=entry)
+    if response.status_code==400:
+        response = requests.put(url, json=entry)
+        if response.status_code==400:
+            return {"message":"Rating May Day"}
+    return entry,200
+
+@app.route("/go-back")
+def go_back():
+    user = request.args.get("user_name")
+    return redirect(f"/user/{user}")
 
 
 @app.route("/songpopulator")
 def singer():
-
     fake = Faker()
     for _ in range(50):
         song = Songs(

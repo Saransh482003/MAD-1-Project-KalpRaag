@@ -53,8 +53,13 @@
                         {% set dur = i["duration"] %}
                         {% set min = (dur//60) %}
                         {% set sec = (dur%60) %}
-                        {% if min < 10 %} {% set min=("0" + min|string) %} {% endif %} {% if sec < 10 %} {% set sec=("0"
-                            + sec|string) %} {% endif %} <p class="musicDesc">{{ min }}:{{ sec }}</p>
+                        {% if min < 10 %} 
+                            {% set min=("0" + min|string) %} 
+                        {% endif %} 
+                        {% if sec < 10 %} 
+                            {% set sec=("0" + sec|string) %} 
+                        {% endif %} 
+                        <p class="musicDesc">{{ min }}:{{ sec }}</p>
                     </div>
                     <div class="controlCont">
                         <div class="controlBtn update-content-link" data-song-id="{{i['song_id']}}"
