@@ -32,3 +32,10 @@ class Rating(db.Model):
     love = db.Column(db.Integer, nullable=False)
     user_name = db.Column(db.String,nullable=False)
     __table_args__ = (db.UniqueConstraint('song_id', 'user_name', name='song_user_unique'),)
+
+class Playlist(db.Model):
+    playlist_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    playlist_name = db.Column(db.String, nullable=False)
+    user_name = db.Column(db.String, nullable=False)
+    song_ids = db.Column(db.String, nullable=False)
+    __table_args__ = (db.UniqueConstraint('playlist_name', 'user_name', name='playlist_user_unique'),)

@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../static/styles/index.css">
-    <link rel="stylesheet" href="../../static/styles/user.css">
-    <link rel="stylesheet" href="../../static/styles/readLyrics.css">
-    <link rel="icon" href="../../static/images/KalpRaag Logo Rounded.png">
+    <link rel="stylesheet" href="../../../../static/styles/index.css">
+    <link rel="stylesheet" href="../../../../static/styles/user.css">
+    <link rel="stylesheet" href="../../../../static/styles/readLyrics.css">
+    <link rel="icon" href="../../../../static/images/KalpRaag Logo Rounded.png">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Read Lyrics - {{response["song_name"]}}</title>
 </head>
@@ -16,14 +16,14 @@
     <div id="press" data-time={{time}} data-paused={{paused}}></div>
     <nav id="navbar">
         <div id="profile">
-            <img src="../../static/images/KalpRaag Logo.png" alt="KalpRaag Logo" id="logo">
+            <img src="../../../../static/images/KalpRaag Logo.png" alt="KalpRaag Logo" id="logo">
             <p>Kalp Raag</p>
             <!-- <p>Kalp राग</p> -->
         </div>
         <div id="search">
             <div id="searchBox">
                 <div id="searchIcon">
-                    <img src="../../static/images/search.png" alt="Search Btn" id="searchIconImg">
+                    <img src="../../../../static/images/search.png" alt="Search Btn" id="searchIconImg">
                 </div>
                 <div id="type">
                     <input type="text" name="search" id="typeIn" placeholder="What's on your mind today?">
@@ -39,7 +39,26 @@
     </nav>
     <section id="main">
         <div id="navigator">
-
+            <div id="library">
+                <a href="../{{user_name}}" data-user={{user_name}} id="song_menu" style="text-decoration: none;color: white;font-size: 1.5rem;">Song Menu &nbsp;&#11166;</a>
+                <h1>Your Library &nbsp;&#11166;</h1>
+                <a href="../{{user_name}}/liked_songs" class="linkContainer">
+                    <img src="../../static/images/full_heart.png" alt="" class="navImgs">
+                    <h3 class="links">Liked Songs</h3>
+                </a>
+                <div class="linkContainer">
+                    <img src="../../static/images/playlist.png" alt="" class="navImgs">
+                    <h3 class="links">Playlists</h3>
+                </div>
+                <a href="../{{user_name}}/add_playlist" class="playlists">&#x2b;&ensp;Create Playlist</a>
+                {% for playlist in playlists %}
+                    <a href="../{{user_name}}/playlists?playlist_id={{playlist['playlist_id']}}" class="playlists">&#11166;&ensp;{{playlist["playlist_name"]}}</a>
+                {% endfor %}
+                <a href="./{{user_name}}/albums" class="linkContainer">
+                    <img src="../../static/images/album.png" alt="" class="navImgs">
+                    <h3 class="links">Saved Albums</h3>
+                </a>
+            </div>
 
         </div>
         <div id="musicBody">
@@ -56,16 +75,16 @@
 
                     {% for rate in range(0,5) %}
                         {% if rate < rating | int %}
-                            <img src="../../static/images/full_star.png" alt={{rating}} id="star{{rate}}" class="star" title="Rated">
+                            <img src="../../../../static/images/full_star.png" alt={{rating}} id="star{{rate}}" class="star" title="Rated">
                         {% else %}
-                            <img src="../../static/images/blank_star.png" alt={{rating}} id="star{{rate}}" class="star" title="Rate">
+                            <img src="../../../../static/images/blank_star.png" alt={{rating}} id="star{{rate}}" class="star" title="Rate">
                         {% endif %}                            
                     {% endfor %}
                     <p id="rating">{{rating}}</p>
                     {% if love==0 %}
-                        <img src="../../static/images/blank_heart.png" alt="Like!!" id="love" data-love={{love}} title="Like">
+                        <img src="../../../../static/images/blank_heart.png" alt="Like!!" id="love" data-love={{love}} title="Like">
                     {% else %}
-                        <img src="../../static/images/full_heart.png" alt="Like!!" id="love" data-love={{love}} title="Like">
+                        <img src="../../../../static/images/full_heart.png" alt="Like!!" id="love" data-love={{love}} title="Like">
                     {% endif %}
 
                 </div>
@@ -115,17 +134,21 @@
     </section>
     <section id="musicPlayer">
         <div id="musicDetails">
-            <div id="musicImgBottom"></div>
+            <div id="musicImgBottom">{{response["song_name"][0]|upper}}</div>
             <div id="musicContentBottom">
-                <p id="musicNameBottom"></p>
-                <p id="musicArtistBottom"></p>
+                <p id="musicNameBottom">{{response["song_name"][0]|upper + response["song_name"][1:]}}</p>
+                <p id="musicArtistBottom">{{response["artist_id"]}}</p>
+                <!-- {% set dur = response["duration"] %}
+                {% set min = (dur//60) %}
+                {% set sec = (dur%60) %}
+                {% if min < 10 %} 
+                    {% set min=("0" + min|string) %} 
+                {% endif %} 
+                {% if sec < 10 %} 
+                    {% set sec=("0" + sec|string) %} 
+                {% endif %}
+                <p id="musicArtistBottom">{{ min }}:{{ sec }}</p> -->
                 <!-- <p id="musicDurationBottom"></p> -->
-            </div>
-            <div id="musicFav">
-                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
-                    <path fill="white" class="svg"
-                        d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402m5.726-20.583c-2.203 0-4.446 1.042-5.726 3.238-1.285-2.206-3.522-3.248-5.719-3.248-3.183 0-6.281 2.187-6.281 6.191 0 4.661 5.571 9.429 12 15.809 6.43-6.38 12-11.148 12-15.809 0-4.011-3.095-6.181-6.274-6.181" />
-                </svg>
             </div>
         </div>
         <div id="playBtns">
@@ -136,27 +159,27 @@
             </div>
             <div id="controlers">
                 <div id="previous" class="controlerCont">
-                    <img src="../../static/images/back.png" alt="Previous Song" id="musicBarPrevious"
+                    <img src="../../../../static/images/back.png" alt="Previous Song" id="musicBarPrevious"
                         class="controlers">
                 </div>
                 <div id="previous10Sec" class="controlerCont">
-                    <img src="../../static/images/10secback.png" alt="10sec back" id="musicBarPrevious10Sec"
+                    <img src="../../../../static/images/10secback.png" alt="10sec back" id="musicBarPrevious10Sec"
                         class="controlers">
                 </div>
                 <div id="playPause" class="controlerCont">
-                    <img src="../../static/images/play.png" alt="Play" id="musicBarPlayPause" class="controlers">
+                    <img src="../../../../static/images/play.png" alt="Play" id="musicBarPlayPause" class="controlers">
                 </div>
                 <div id="forward10Sec" class="controlerCont">
-                    <img src="../../static/images/10secforward.png" alt="10sec back" id="musicBarForward10Sec"
+                    <img src="../../../../static/images/10secforward.png" alt="10sec back" id="musicBarForward10Sec"
                         class="controlers">
                 </div>
                 <div id="forward" class="controlerCont">
-                    <img src="../../static/images/next.png" alt="Forward Song" id="musicBarForward" class="controlers">
+                    <img src="../../../../static/images/next.png" alt="Forward Song" id="musicBarForward" class="controlers">
                 </div>
             </div>
 
     </section>
-    <script src="../../static/scripts/lyrics.js"></script>
+    <script src="../../../../static/scripts/lyrics.js"></script>
 </body>
 
 </html>

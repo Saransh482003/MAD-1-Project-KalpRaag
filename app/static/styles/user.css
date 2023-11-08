@@ -88,16 +88,70 @@
 #navigator{
     display: flex;
     flex-direction: column;
+        overflow: hidden;
+    overflow-y: auto;
     justify-content: center;
     align-items: center;
     height: 78vh;
     width: 20%;
     background-color: #141414;
+    color: white;
     background-image: linear-gradient(180deg,#141414,black);
-    /* border-right: 0.2rem solid white; */
-    /* position: relative; */
+    border-right: 0.5rem solid transparent;
+    /* border-image: linear-gradient(270deg, black, red);
+    border-image-slice: 1;
+    border-image-outset: 0; */
+}
+::-webkit-scrollbar {
+    width: 0.75rem;
 }
 
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    position: relative;
+    border-radius: 0.375rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    position: absolute;
+    /* background-color: #555; */
+}
+#library{
+    display: flex;
+    flex-direction: column;
+    /* background-color: aqua; */
+    height: 90%;
+    width: 90%;
+    margin: 0rem;
+}
+#library h1{
+    margin: 1rem 0rem 0.5rem 0rem;
+    cursor: pointer;
+}
+.linkContainer{
+    display: flex;
+    flex-direction: row;
+    height: 2rem;
+    width: 90%;
+    margin: 1rem 0rem 0.5rem 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+}
+.playlists{
+    text-decoration: none;
+    color: white;
+    margin-left: 4rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+.links{
+    margin-left: 1rem;
+}
+.navImgs{
+    height: auto;
+    width: 2rem;
+}
 #musicBody{
     align-items: center; 
     height: 100%;
@@ -109,7 +163,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
+    /* justify-content: center; */
     width: 100%;
     height: 100%;
     /* background-color: azure; */

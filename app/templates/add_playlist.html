@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KalpRaag : A Music Screaming Platform</title>
+    <link rel="stylesheet" href="../../static/styles/index.css">
+    <link rel="stylesheet" href="../../static/styles/user.css">
+    <link rel="stylesheet" href="../../static/styles/add_playlist.css">
+    <link rel="icon" href="../../static/images/KalpRaag Logo Rounded.png">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <nav id="navbar">
+        <div id="profile">
+            <img src="../../static/images/KalpRaag Logo.png" alt="KalpRaag Logo" id="logo">
+            <p>Kalp Raag</p>
+            <!-- <p>Kalp राग</p> -->
+        </div>
+        <div id="search">
+            <div id="searchBox">
+                <div id="searchIcon">
+                    <img src="../../static/images/search.png" alt="Search Btn" id="searchIconImg">
+                </div>
+                <div id="type">
+                    <input type="text" name="search" id="typeIn" placeholder="What's on your mind today?">
+                </div>
+
+            </div>
+
+        </div>
+        <div id="links">
+            <a href="#" class="link">Become a Creator</a>
+            <a href="/">Logout</a>
+        </div>
+    </nav>
+    <hr>
+    <section id="main">
+        <div id="navigator">
+            <div id="library">
+                <a href="../{{user_name}}" data-user={{user_name}} id="song_menu" style="text-decoration: none;color: white;font-size: 1.5rem;">Song Menu &nbsp;&#11166;</a>
+                <h1>Your Library &nbsp;&#11166;</h1>
+                <a href="../{{user_name}}/liked_songs" class="linkContainer">
+                    <img src="../../static/images/full_heart.png" alt="" class="navImgs">
+                    <h3 class="links">Liked Songs</h3>
+                </a>
+                <div class="linkContainer">
+                    <img src="../../static/images/playlist.png" alt="" class="navImgs">
+                    <h3 class="links">Playlists</h3>
+                </div>
+                <a href="../{{user_name}}/add_playlist" class="playlists">&#x2b;&ensp;Create Playlist</a>
+                {% for playlist in playlists %}
+                    <a href="../{{user_name}}/playlists?playlist_id={{playlist['playlist_id']}}&user_name={{user_name}}" class="playlists">&#11166;&ensp;{{playlist["playlist_name"]}}</a>
+                {% endfor %}
+
+                <a href="./{{user_name}}/albums" class="linkContainer">
+                    <img src="../../static/images/album.png" alt="" class="navImgs">
+                    <h3 class="links">Saved Albums</h3>
+                </a>
+            </div>
+        </div>
+        <div id="musicBody">
+            <div id="musicContainer">
+                <img src="../../static/images/create.png" alt="" id="creator">
+                <input type="text" id="newName" placeholder="Enter New Playlist Name">
+                <div id="createBtn" data-user={{user_name}}>Create Playlist</div>
+            </div>
+        </div>
+    </section>
+    <section id="musicPlayer">
+        <div id="musicDetails">
+            <div id="musicImgBottom">
+            </div>
+            <div id="musicContentBottom">
+                <p id="musicNameBottom"></p>
+                <p id="musicArtistBottom"></p>
+                <!-- <p id="musicDurationBottom"></p> -->
+            </div>
+        </div>
+        <div id="playBtns">
+            <div id="lyricsCont">
+                <div id="lyrics">
+                    Read Lyrics
+                </div>
+            </div>
+            <div id="controlers">
+                <div id="previous" class="controlerCont">
+                    <img src="../../static/images/back.png" alt="Previous Song" id="musicBarPrevious" class="controlers">
+                </div>
+                <div id="previous10Sec" class="controlerCont">
+                    <img src="../../static/images/10secback.png" alt="10sec back" id="musicBarPrevious10Sec"
+                        class="controlers">
+                </div>
+                <div id="playPause" class="controlerCont">
+                    <img src="../../static/images/play.png" alt="Play" id="musicBarPlayPause" class="controlers">
+                </div>
+                <div id="forward10Sec" class="controlerCont">
+                    <img src="../../static/images/10secforward.png" alt="10sec back" id="musicBarForward10Sec"
+                        class="controlers">
+                </div>
+                <div id="forward" class="controlerCont">
+                    <img src="../../static/images/next.png" alt="Forward Song" id="musicBarForward" class="controlers">
+                </div>
+            </div>
+
+    </section>
+    <script src="../../static/scripts/liked_songs.js"></script>
+    <script src="../../static/scripts/add_playlist.js"></script>
+
+    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+</body>
+
+</html>

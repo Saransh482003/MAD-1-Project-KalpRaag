@@ -43,7 +43,9 @@ def home(user_name):
     url = f"http://127.0.0.1:5000/api/songs"
     response = requests.get(url).json()
     user_name = "%20".join(user_name.split(" "))
-    return render_template("user.html",allSongs=response,user_name=user_name)
+    playlistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
+    playlistData = requests.get(playlistFetcher).json()
+    return render_template("user.html",allSongs=response,user_name=user_name,playlists=playlistData)
 
 @app.route("/update-section")
 def musicPlayer():
@@ -72,7 +74,9 @@ def lyricist(user_name):
     else:
         rating=0
         love=0
-    return render_template("readLyrics.html",song_id=song_id,time=time,paused=paused,response=response,lines=lines,rating=rating,love=love,user_name=user_name)
+    playlistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
+    playlistData = requests.get(playlistFetcher).json()
+    return render_template("readLyrics.html",song_id=song_id,time=time,paused=paused,response=response,lines=lines,rating=rating,love=love,user_name=user_name,playlists=playlistData)
 
 @app.route('/update-song-rating')
 def update_rating():
@@ -80,8 +84,7 @@ def update_rating():
     rating = request.args.get("rating")
     love = request.args.get("love")
     user_name = request.args.get("user_name")
-    print(song_id,rating,user_name,love)
-
+    user_name = "%20".join(user_name.split(" "))
     url = "http://127.0.0.1:5000/api/rating"
     entry = {
         "song_id":song_id,
@@ -100,6 +103,66 @@ def update_rating():
 def go_back():
     user = request.args.get("user_name")
     return redirect(f"/user/{user}")
+
+
+@app.route("/user/<user_name>/liked_songs")
+def liked_songs(user_name):
+    user_name="%20".join(user_name.split(" "))
+    likeFetcher = f"http://127.0.0.1:5000/api/rating?user_name={user_name}"
+    likeData = requests.get(likeFetcher).json()
+    songs = []
+    for i in likeData:
+        song_id = i["song_id"]
+        songFetcher = f"http://127.0.0.1:5000/api/songs?id={song_id}"
+        songData = requests.get(songFetcher).json()
+        songs.append(songData)
+    playlistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
+    playlistData = requests.get(playlistFetcher).json()
+    return render_template("liked_songs.html",allSongs=songs,user_name=user_name,playlists=playlistData)
+
+@app.route("/user/<user_name>/playlists")
+def playlist(user_name):
+    user_name="%20".join(user_name.split(" "))
+    playlist_id = request.args.get("playlist_id")
+    allPlaylistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
+    allPlaylistData = requests.get(allPlaylistFetcher).json()
+    playlistFetcher = f"http://127.0.0.1:5000/api/playlist?playlist_id={playlist_id}&user_name={user_name}"
+    playlistData = requests.get(playlistFetcher).json()
+    song_ids = playlistData["song_ids"]
+    songs = []
+    if song_ids != "":
+        for i in song_ids.split(","):
+            songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
+            songData = requests.get(songFetcher).json()
+            songs.append(songData)
+    return render_template("playlist.html",allSongs=songs,user_name=user_name,playlists=allPlaylistData)
+
+@app.route("/user/<user_name>/add_playlist")
+def add_playlist(user_name):
+    user_name="%20".join(user_name.split(" "))
+    allPlaylistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
+    allPlaylistData = requests.get(allPlaylistFetcher).json()
+    return render_template("add_playlist.html", user_name=user_name,playlists=allPlaylistData)
+
+@app.route('/add-playlist')
+def create_playlist():
+    playlist_name = request.args.get("playlist_name")
+    user_name = request.args.get("user_name")
+
+    url = "http://127.0.0.1:5000/api/playlist"
+    entry = {
+        "playlist_name":playlist_name,
+        "user_name":user_name,
+        "song_ids":"",
+    }
+    user_name = "%20".join(user_name.split(" "))
+    playlist_name = "%20".join(playlist_name.split(" "))
+    response = requests.post(url, json=entry)
+    if response.status_code==400:
+        response = requests.put(url, json=entry)
+        if response.status_code==400:
+            return {"message":"Rating May Day"}
+    return entry,200
 
 
 @app.route("/songpopulator")
