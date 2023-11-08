@@ -76,7 +76,11 @@ def lyricist(user_name):
         love=0
     playlistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
     playlistData = requests.get(playlistFetcher).json()
-    return render_template("readLyrics.html",song_id=song_id,time=time,paused=paused,response=response,lines=lines,rating=rating,love=love,user_name=user_name,playlists=playlistData)
+    playlistList = []
+    for i in playlistData:
+        if song_id in i["song_ids"].split(","):
+            playlistList.append(i)
+    return render_template("readLyrics.html",song_id=song_id,time=time,paused=paused,response=response,lines=lines,rating=rating,love=love,user_name=user_name,playlists=playlistData,playlistList=playlistList)
 
 @app.route('/update-song-rating')
 def update_rating():
@@ -135,7 +139,8 @@ def playlist(user_name):
             songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
             songData = requests.get(songFetcher).json()
             songs.append(songData)
-    return render_template("playlist.html",allSongs=songs,user_name=user_name,playlists=allPlaylistData)
+    playlistName = "%20".join(playlistData["playlist_name"].split(" "))
+    return render_template("playlist.html",allSongs=songs,user_name=user_name,playlists=allPlaylistData,playlistName=playlistName)
 
 @app.route("/user/<user_name>/add_playlist")
 def add_playlist(user_name):
@@ -164,6 +169,16 @@ def create_playlist():
             return {"message":"Rating May Day"}
     return entry,200
 
+@app.route("/delete-playlist")
+def delete_playlist():
+    playlistName = request.args.get("playlist_name")
+    user_name = request.args.get("user_name")
+    print(playlistName,user_name)
+    url = f"http://127.0.0.1:5000/api/playlist?playlist_name={playlistName}&user_name={user_name}"
+    response = requests.delete(url)
+    if response.status_code==400:
+        return {"message":"Rating May Day"}
+    return response,200 
 
 @app.route("/songpopulator")
 def singer():

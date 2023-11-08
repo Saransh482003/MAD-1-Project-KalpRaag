@@ -8,6 +8,6 @@ createBtn.addEventListener("click", ()=>{
         $.get(`/add-playlist?playlist_name=${newName}&user_name=${user_name}`, function (data) {
         
         });
-        window.location.href = `/user/${user_name}/add_playlist`
+        window.location.href = `/user/${user_name}/liked_songs`
     }
 })

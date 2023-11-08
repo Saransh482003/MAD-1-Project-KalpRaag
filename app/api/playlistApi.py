@@ -81,10 +81,11 @@ class playlistTransaction(Resource):
         user_name = request.args.get('user_name')
         playlist_name = playlist_name if playlist_name!=None else ""
         user_name = user_name if user_name!=None else ""
-        fetcher = Playlist.query.filter_by(playlist_name=playlist_name,user_name=user_name)
+        print(playlist_name,user_name)
+        fetcher = Playlist.query.filter_by(playlist_name=playlist_name,user_name=user_name).first()
+        print(fetcher)
         if fetcher:
-            for i in fetcher:
-                db.session.delete(i)
+            db.session.delete(fetcher)
             db.session.commit()
             return {f"Playlist Name : {playlist_name} for User : {user_name} deleted"}, 200
         abort(400, message= "Playlist do not exits")

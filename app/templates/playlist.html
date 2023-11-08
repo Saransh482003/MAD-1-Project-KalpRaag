@@ -7,6 +7,7 @@
     <title>KalpRaag : A Music Screaming Platform</title>
     <link rel="stylesheet" href="../../static/styles/index.css">
     <link rel="stylesheet" href="../../static/styles/user.css">
+    <link rel="stylesheet" href="../../static/styles/playlist.css">
     <link rel="icon" href="../../static/images/KalpRaag Logo Rounded.png">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -61,6 +62,13 @@
             </div>
         </div>
         <div id="musicBody">
+            <div id="playlistDetails">
+                <h1 id="playlistName"><img src="../../static/images/playlist.png" alt="" id="playlistIcon">{{playlistName}}</h1>
+                <div id="deleteContainer">
+                    <img src="../../static/images/delete.png" alt="Delete" id="delete" data-playlist-name={{playlistName}} data-user-name={{user_name}}>
+                </div>
+
+            </div>
             <div id="musicContainer">
                 {% for i in allSongs %}
                     <div class="music">
@@ -128,6 +136,7 @@
 
     </section>
     <script src="../../static/scripts/liked_songs.js"></script>
+    <script src="../../static/scripts/playlist.js"></script>
 
     <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
 </body>

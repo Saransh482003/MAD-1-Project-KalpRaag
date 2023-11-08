@@ -122,8 +122,8 @@
                             <p class="info">&emsp;{{loop.index+1}}. {{album}}</p>
                         {% endfor %}
                         <p class="info">Playlists In:</p>
-                        {% for playlist in playlists %}
-                            <p class="info">&emsp;{{loop.index+1}}. {{playlist}}</p>
+                        {% for playlistItem in playlistList %}
+                            <p class="info">&emsp;{{loop.index}}. {{playlistItem["playlist_name"]}}</p>
                         {% endfor %}
                     </div>
                 </div>
