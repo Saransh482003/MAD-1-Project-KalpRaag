@@ -62,10 +62,14 @@
             </div>
         </div>
         <div id="musicBody">
+            <!-- {% set playlistName = playlistName|replace('%20',' ') %} -->
             <div id="playlistDetails">
-                <h1 id="playlistName"><img src="../../static/images/playlist.png" alt="" id="playlistIcon">{{playlistName}}</h1>
+                <h1 id="playlistName">
+                    <img src="../../static/images/playlist.png" alt="" id="playlistIcon">
+                    {{playlistName}}
+                </h1>
                 <div id="deleteContainer">
-                    <img src="../../static/images/delete.png" alt="Delete" id="delete" data-playlist-name={{playlistName}} data-user-name={{user_name}}>
+                    <img src="../../static/images/delete.png" alt="Delete" id="delete" data-playlist-name="{{playlistName}}"  data-user-name={{user_name}}>
                 </div>
 
             </div>

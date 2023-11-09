@@ -23,7 +23,7 @@ playPause.addEventListener("click", () => {
         if (audio.paused) {
             audio.play()
 
-            console.log(audio.currentTime)
+            // console.log(audio.currentTime)
         }
     }
     else {
@@ -155,6 +155,15 @@ love.addEventListener("click",()=>{
 
 musicStat.addEventListener("click", () => {
     $.get(`/update-song-rating?song_id=${song_id}&rating=${rate}&user_name=${user_name}&love=${loveVal}`, function (data) {
+        
+    });
+})
+
+let addToPlaylist = document.getElementById("add")
+addToPlaylist.addEventListener("click",()=>{
+    let dropDown = document.getElementById("dropDown")
+    let dropVal = dropDown.value
+    $.get(`/add-song-to-playlist?song_id=${song_id}&user_name=${user_name}&playlist_name=${dropVal}`, function (data) {
         
     });
 })

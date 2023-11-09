@@ -351,7 +351,7 @@
     transition: all 0.15s ease-out;
 }
 #lyrics:hover{
-    box-shadow: 0 0 1.25rem 0.35rem rgba(215, 0, 183, 0.7);;
+    box-shadow: 0 0 1.25rem 0.35rem rgba(215, 0, 183, 0.7);
 }
 .controlerCont{
     display: flex;

@@ -139,7 +139,9 @@ def playlist(user_name):
             songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
             songData = requests.get(songFetcher).json()
             songs.append(songData)
+    # print(playlistData["playlist_name"])
     playlistName = "%20".join(playlistData["playlist_name"].split(" "))
+    # print(playlistName)
     return render_template("playlist.html",allSongs=songs,user_name=user_name,playlists=allPlaylistData,playlistName=playlistName)
 
 @app.route("/user/<user_name>/add_playlist")
@@ -173,12 +175,37 @@ def create_playlist():
 def delete_playlist():
     playlistName = request.args.get("playlist_name")
     user_name = request.args.get("user_name")
-    print(playlistName,user_name)
+    # print(playlistName,user_name)
     url = f"http://127.0.0.1:5000/api/playlist?playlist_name={playlistName}&user_name={user_name}"
     response = requests.delete(url)
     if response.status_code==400:
         return {"message":"Rating May Day"}
     return response,200 
+
+@app.route("/add-song-to-playlist")
+def add_song_to_playlist():
+    playlist_name = request.args.get("playlist_name")
+    user_name = request.args.get("user_name")
+    song_id = request.args.get("song_id")
+    playlistFetcher = f"http://127.0.0.1:5000/api/playlist?playlist_name={playlist_name}&user_name={user_name}"
+    playlistData = requests.get(playlistFetcher).json()
+    url = "http://127.0.0.1:5000/api/playlist"
+    song_ids = playlistData["song_ids"]
+    if song_ids=="":
+        song_ids+=f"{song_id}"
+    elif song_id in song_ids:
+        song_ids=song_ids
+    else:
+        song_ids+=f",{song_id}"
+    entry = {
+        "playlist_name":playlist_name,
+        "user_name":user_name,
+        "song_ids":song_ids,
+    }
+    response = requests.put(url, json=entry)
+    if response.status_code==400:
+        return {"message":"Rating May Day"}
+    return entry,200
 
 @app.route("/songpopulator")
 def singer():
