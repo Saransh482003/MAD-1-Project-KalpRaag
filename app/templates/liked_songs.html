@@ -7,6 +7,7 @@
     <title>KalpRaag : A Music Screaming Platform</title>
     <link rel="stylesheet" href="../../static/styles/index.css">
     <link rel="stylesheet" href="../../static/styles/user.css">
+    <link rel="stylesheet" href="../../static/styles/playlist.css">
     <link rel="icon" href="../../static/images/KalpRaag Logo Rounded.png">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -54,10 +55,13 @@
                     <a href="../{{user_name}}/playlists?playlist_id={{playlist['playlist_id']}}" class="playlists">&#11166;&ensp;{{playlist["playlist_name"]}}</a>
                 {% endfor %}
 
-                <a href="./{{user_name}}/albums" class="linkContainer">
+                <div class="linkContainer">
                     <img src="../../static/images/album.png" alt="" class="navImgs">
                     <h3 class="links">Saved Albums</h3>
-                </a>
+                </div>
+                {% for album in albums %}
+                    <a href="../{{user_name}}/album?album_id={{album['album_id']}}" class="playlists">&#11166;&ensp;{{album["album_name"]}}</a>
+                {% endfor %}
             </div>
         </div>
         <div id="musicBody">
@@ -84,6 +88,9 @@
                                 data-user-name={{user_name}}>
                                 <img src="../../static/images/play.png" alt="Play" class="control">
                             </div>
+                        </div>
+                        <div class="musicDeleter" data-user-name="{{user_name}}" data-song-id="{{i['song_id']}}">
+                            Unlike Song
                         </div>
                     </div>
                 {% endfor %}

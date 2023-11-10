@@ -8,3 +8,14 @@ deletePlaylist.addEventListener("click",()=>{
     });
     window.location.href = `/user/${user_name}/liked_songs`
 })
+
+let deleteSong = document.getElementsByClassName('musicDeleter')
+for (let i=0;i<deleteSong.length;i++){
+    deleteSong[i].addEventListener("click",()=>{
+        $.get(`/delete-song-from-playlist?playlist_name=${deleteSong[i].getAttribute("data-playlist-name")}&user_name=${deleteSong[i].getAttribute("data-user-name")}&song_id=${deleteSong[i].getAttribute("data-song-id")}`, function (data) {
+            
+        });
+        // window.location.href = `/user/${user_name}/playlists?playlist_id=${deleteSong[i].getAttribute("data-playlist-id")}&user_name=${deleteSong[i].getAttribute("data-playlist-name")}`
+        window.location.href = `/user/${user_name}/liked_songs`
+    })
+}

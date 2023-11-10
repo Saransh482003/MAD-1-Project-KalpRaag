@@ -55,10 +55,13 @@
                     <a href="../{{user_name}}/playlists?playlist_id={{playlist['playlist_id']}}&user_name={{user_name}}" class="playlists">&#11166;&ensp;{{playlist["playlist_name"]}}</a>
                 {% endfor %}
 
-                <a href="./{{user_name}}/albums" class="linkContainer">
+                <div class="linkContainer">
                     <img src="../../static/images/album.png" alt="" class="navImgs">
                     <h3 class="links">Saved Albums</h3>
-                </a>
+                </div>
+                {% for album in albums %}
+                    <a href="../{{user_name}}/album?album_id={{album['album_id']}}" class="playlists">&#11166;&ensp;{{album["album_name"]}}</a>
+                {% endfor %}
             </div>
         </div>
         <div id="musicBody">

@@ -54,10 +54,13 @@
                 {% for playlist in playlists %}
                     <a href="../{{user_name}}/playlists?playlist_id={{playlist['playlist_id']}}" class="playlists">&#11166;&ensp;{{playlist["playlist_name"]}}</a>
                 {% endfor %}
-                <a href="./{{user_name}}/albums" class="linkContainer">
+                <div class="linkContainer">
                     <img src="../../static/images/album.png" alt="" class="navImgs">
                     <h3 class="links">Saved Albums</h3>
-                </a>
+                </div>
+                {% for album in albums %}
+                    <a href="../{{user_name}}/album?album_id={{album['album_id']}}" class="playlists">&#11166;&ensp;{{album["album_name"]}}</a>
+                {% endfor %}
             </div>
 
         </div>
@@ -118,13 +121,14 @@
                         <p class="info">Creator: {{response["creator_id"]}}</p>
                         <p class="info">Date Created: {{response["date_created"]}}</p>
                         <p class="info">Albums In:</p>
-                        {% for album in albums %}
-                            <p class="info">&emsp;{{loop.index+1}}. {{album}}</p>
+                        {% for albumIn in albumsIn %}
+                            <p class="info">&emsp;{{loop.index}}. {{albumIn["album_name"]}}</p>
                         {% endfor %}
                         <p class="info">Playlists In:</p>
                         {% for playlistItem in playlistList %}
                             <p class="info">&emsp;{{loop.index}}. {{playlistItem["playlist_name"]}}</p>
                         {% endfor %}
+                        
                     </div>
                 </div>
                 <div id="addToPlay">

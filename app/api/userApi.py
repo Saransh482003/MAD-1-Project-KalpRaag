@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from flask_restful import Api, Resource, marshal_with, reqparse, fields, abort
+from flask_restful import Api, Resource, marshal_with, reqparse, fields, abort, request
 from app.models import db, Users
 
 api_user = Blueprint("api_u",__name__)
@@ -24,18 +24,46 @@ user_put.add_argument("creator_id", type=int, help="Enter creator id")
 user_put.add_argument("playlists", type=str, help="Enter playlist")
 class userTransaction(Resource):
     @marshal_with(returner)
-    def get(self,user_id):
-        data = Users.query.filter_by(user_id=user_id).first()
-        if data:
-            return data, 200
-        abort(400,message="User do not exist")
+    def get(self):
+        user_id = request.args.get('user_id')
+        user_name = request.args.get('user_name')
+        user_password = request.args.get('user_password')
+        creator_id = request.args.get('creator_id')
+        playlists = request.args.get('playlists')
+        
+        if user_name and user_password:
+            data = Users.query.filter_by(user_name=user_name,user_password=user_password).first()
+        else:
+            if user_id:
+                data = Users.query.filter_by(user_id=user_id).first()
+            elif user_name:
+                data = Users.query.filter_by(user_name=user_name).first()
+            elif user_password:
+                data = Users.query.filter_by(user_password=user_password).first()
+            elif creator_id:
+                data = Users.query.filter_by(creator_id=creator_id).first()
+            elif playlists:
+                data = Users.query.filter_by(playlists=playlists).all()
+            else:
+                data = Users.query.all()
 
-    @marshal_with(returner)
-    def get(self,user_name,user_password):
-        data = Users.query.filter_by(user_name=user_name,user_password=user_password).first()
         if data:
             return data, 200
-        abort(400,message="User do not exist")
+        abort(400, message= "Users does not exist")
+
+    # @marshal_with(returner)
+    # def get(self,user_id):
+    #     data = Users.query.filter_by(user_id=user_id).first()
+    #     if data:
+    #         return data, 200
+    #     abort(400,message="User do not exist")
+
+    # @marshal_with(returner)
+    # def get(self,user_name,user_password):
+    #     data = Users.query.filter_by(user_name=user_name,user_password=user_password).first()
+    #     if data:
+    #         return data, 200
+    #     abort(400,message="User do not exist")
     
     @marshal_with(returner)
     def post(self):

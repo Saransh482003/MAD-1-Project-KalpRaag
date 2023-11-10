@@ -39,3 +39,14 @@ class Playlist(db.Model):
     user_name = db.Column(db.String, nullable=False)
     song_ids = db.Column(db.String, nullable=False)
     __table_args__ = (db.UniqueConstraint('playlist_name', 'user_name', name='playlist_user_unique'),)
+
+class Album(db.Model):
+    album_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    album_name = db.Column(db.String, nullable=False)
+    genre = db.Column(db.String, nullable=False)
+    artist_id = db.Column(db.Integer, nullable=False)
+    creator_id = db.Column(db.Integer, nullable=False)
+    date_created = db.Column(db.String, nullable=False)
+    song_ids = db.Column(db.String, nullable=False)
+    saved_by = db.Column(db.String, nullable=False)
+    __table_args__ = (db.UniqueConstraint('creator_id', 'album_name', name='album_creator_unique'),)

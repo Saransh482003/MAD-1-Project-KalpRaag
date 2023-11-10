@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../static/styles/index.css">
     <link rel="stylesheet" href="../../static/styles/user.css">
     <link rel="stylesheet" href="../../static/styles/playlist.css">
+    <link rel="stylesheet" href="../../static/styles/album.css">
     <link rel="icon" href="../../static/images/KalpRaag Logo Rounded.png">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -68,12 +69,9 @@
             <!-- {% set playlistName = playlistName|replace('%20',' ') %} -->
             <div id="playlistDetails">
                 <h1 id="playlistName">
-                    <img src="../../static/images/playlist.png" alt="" id="playlistIcon">
-                    {{playlistName}}
+                    <img src="../../static/images/album.png" alt="" id="playlistIcon">
+                    {{albumData["album_name"]}}
                 </h1>
-                <div id="deleteContainer">
-                    <img src="../../static/images/delete.png" alt="Delete" id="delete" data-playlist-name="{{playlistName}}"  data-user-name={{user_name}}>
-                </div>
 
             </div>
             <div id="musicContainer">
@@ -99,9 +97,6 @@
                                 data-user-name={{user_name}}>
                                 <img src="../../static/images/play.png" alt="Play" class="control">
                             </div>
-                        </div>
-                        <div class="musicDeleter" data-playlist-name="{{playlistName}}" data-user-name={{user_name}} data-song-id="{{i['song_id']}}" data-playlist-id="{{playlistId}}">
-                            Delete Song
                         </div>
                     </div>
                 {% endfor %}

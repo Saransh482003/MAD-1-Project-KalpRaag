@@ -56,3 +56,67 @@
 #delete:hover{
     filter:none;
 }
+.music{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 1rem;
+    width: 13rem;
+    height: 18rem;
+    background-color: transparent;
+    border-radius: 1rem;
+    z-index: 0;
+}
+.musicImg{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* margin-top: 1rem; */
+    color: white;
+    height: 45%;
+    width: 90%;
+    font-family: "Chopin";
+    text-align: center;
+    font-weight: 600;
+    font-size: 5rem;
+    
+    /* background-color:antiquewhite; */
+    z-index: 1;
+}
+.musicContent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 25%;
+    width: 90%;
+    font-size: 1.1rem;
+    /* background-color: aliceblue; */
+}
+.musicDesc{
+    font-size: 0.9rem;
+    color: #141414;
+}
+.controlCont{
+    display: flex;
+    flex-direction: row;
+    height: 20%;
+    width: 90%;
+    /* background-color: antiquewhite; */
+    justify-content: center;
+    align-items: center;
+}
+.musicDeleter{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+    background-color: red;
+    color: white;
+    border-bottom-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    cursor: pointer;
+}
