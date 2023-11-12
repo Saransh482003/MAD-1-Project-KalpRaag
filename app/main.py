@@ -98,7 +98,7 @@ def update_rating():
     rating = request.args.get("rating")
     love = request.args.get("love")
     user_name = request.args.get("user_name")
-    user_name = "%20".join(user_name.split(" "))
+    # user_name = "%20".join(user_name.split(" "))
     url = "http://127.0.0.1:5000/api/rating"
     entry = {
         "song_id":song_id,
@@ -229,6 +229,7 @@ def delete_song_from_playlist():
     playlist_name = request.args.get("playlist_name")
     user_name = request.args.get("user_name")
     song_id = request.args.get("song_id")
+    print(playlist_name,user_name,song_id)
     playlistFetcher = f"http://127.0.0.1:5000/api/playlist?playlist_name={playlist_name}&user_name={user_name}"
     playlistData = requests.get(playlistFetcher).json()
     url = "http://127.0.0.1:5000/api/playlist"
@@ -248,7 +249,7 @@ def delete_song_from_playlist():
 
 @app.route("/user/<user_name>/album")
 def album(user_name):
-    user_name="%20".join(user_name.split(" "))
+    # user_name="%20".join(user_name.split(" "))
     album_id = request.args.get("album_id")
     allPlaylistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
     allPlaylistData = requests.get(allPlaylistFetcher).json()
@@ -270,7 +271,7 @@ def album(user_name):
 def unlike_song():
     user_name = request.args.get("user_name")
     song_id = request.args.get("song_id")
-    user_name="%20".join(user_name.split(" "))
+    # user_name="%20".join(user_name.split(" "))
     likeFetcher = f"http://127.0.0.1:5000/api/rating?user_name={user_name}&song_id={song_id}"
     likeData = requests.get(likeFetcher).json()
     url = "http://127.0.0.1:5000/api/rating"
@@ -284,6 +285,41 @@ def unlike_song():
     if response.status_code==400:
         return {"message":"Rating May Day"}
     return entry,200
+
+@app.route("/user/<user_name>/search")
+def searcher(user_name):
+    allPlaylistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
+    allPlaylistData = requests.get(allPlaylistFetcher).json()
+    albumFetcher = f"http://127.0.0.1:5000/api/album?saved_by={user_name}"
+    albumData = requests.get(albumFetcher).json()
+
+    key = request.args.get("key")
+    filterVal = request.args.get("filter")
+
+    fetchSearchData = []
+    fetchAlbumData = []
+    if filterVal=="Song":
+        fetchSearch = f"http://127.0.0.1:5000/api/songs?key={key}&filter={filterVal}"
+        searchData = requests.get(fetchSearch)
+        fetchSearchData=searchData.json()
+    elif filterVal=="Rating":
+        fetchSearch = f"http://127.0.0.1:5000/api/rating?rating={int(key)}&user_name={user_name}"
+        searchData = requests.get(fetchSearch)
+        songs=searchData.json()
+        # print(songs)
+        if searchData.status_code!=400:
+            for i in songs:
+                songFetcher = f"http://127.0.0.1:5000/api/songs?id={i['song_id']}"
+                songData = requests.get(songFetcher).json()
+                fetchSearchData.append(songData)
+    
+    elif filterVal=="Genre":
+        fetchSearch = f"http://127.0.0.1:5000/api/album?genre={key}"
+        searchData = requests.get(fetchSearch)
+        if searchData.status_code!=400:
+            fetchAlbumData=searchData.json()
+    
+    return render_template("search.html",albums=albumData,playlists=allPlaylistData,user_name=user_name,fetchSearchData=fetchSearchData,fetchAlbumData=fetchAlbumData)
 
 @app.route("/songpopulator")
 def singer():

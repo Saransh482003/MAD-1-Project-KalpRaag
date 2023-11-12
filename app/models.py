@@ -50,3 +50,8 @@ class Album(db.Model):
     song_ids = db.Column(db.String, nullable=False)
     saved_by = db.Column(db.String, nullable=False)
     __table_args__ = (db.UniqueConstraint('creator_id', 'album_name', name='album_creator_unique'),)
+
+class Artists(db.Model):
+    artist_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    artist_name = db.Column(db.String, nullable=False)
+    

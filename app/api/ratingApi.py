@@ -35,21 +35,24 @@ class ratingTransaction(Resource):
         love = request.args.get('love')
         user = request.args.get('user_name')
 
-        if song_id and user:
-            data = Rating.query.filter_by(song_id=song_id, user_name=user).first()
+        if user and rating:
+            data = Rating.query.filter_by(user_name=user, rating=rating).all()
         else:
-            if s_no:
-                data = Rating.query.filter_by(s_no=s_no).first()
-            elif song_id:
-                data = Rating.query.filter_by(song_id=song_id).all()
-            elif rating:
-                data = Rating.query.filter_by(rating=rating).all()
-            elif love:
-                data = Rating.query.filter_by(love=love).all()
-            elif user:
-                data = Rating.query.filter_by(user_name=user).all()
+            if song_id and user:
+                data = Rating.query.filter_by(song_id=song_id, user_name=user).first()
             else:
-                data = Rating.query.all()
+                if s_no:
+                    data = Rating.query.filter_by(s_no=s_no).first()
+                elif song_id:
+                    data = Rating.query.filter_by(song_id=song_id).all()
+                elif rating:
+                    data = Rating.query.filter_by(rating=rating).all()
+                elif love:
+                    data = Rating.query.filter_by(love=love).all()
+                elif user:
+                    data = Rating.query.filter_by(user_name=user).all()
+                else:
+                    data = Rating.query.all()
 
         if data:
             return data, 200

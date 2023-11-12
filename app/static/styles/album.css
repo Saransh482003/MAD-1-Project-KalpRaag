@@ -75,3 +75,12 @@
     border-radius: 100%;
     margin-bottom: 0.5rem;
 }
+#albumInfo{
+    display: flex;
+    flex-direction: row-reverse;
+    /* justify-content: center; */
+    align-items: center;
+    width: 50%;
+    height: 80%;
+    cursor: pointer;
+}

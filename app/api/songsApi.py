@@ -54,25 +54,30 @@ class songTransaction(Resource):
         playlist_in = request.args.get('playlist')
         album_in = request.args.get('album')
         date_created = request.args.get('date')
+        key = request.args.get('key')
+        filterVal = request.args.get('filter')
 
-        if song_id:
-            data = Songs.query.filter_by(song_id=song_id).first()
-        elif song_name:
-            data = Songs.query.filter_by(song_name=song_name).first()
-        elif lyrics_id:
-            data = Songs.query.filter_by(lyrics_id=lyrics_id).first()
-        elif creator_id:
-            data = Songs.query.filter_by(creator_id=creator_id).first()
-        elif artist_id:
-            data = Songs.query.filter_by(artist_id=artist_id).first()
-        elif playlist_in:
-            data = Songs.query.filter_by(playlist_in=playlist_in).first()
-        elif album_in:
-            data = Songs.query.filter_by(album_in=album_in).first()
-        elif date_created:
-            data = Songs.query.filter_by(date_created=date_created).first()
-        else:
-            data = Songs.query.all()
+        if key and filterVal:
+            data = Songs.query.filter(Songs.song_name.like(f"%{key}%")).all()
+        else: 
+            if song_id:
+                data = Songs.query.filter_by(song_id=song_id).first()
+            elif song_name:
+                data = Songs.query.filter_by(song_name=song_name).first()
+            elif lyrics_id:
+                data = Songs.query.filter_by(lyrics_id=lyrics_id).first()
+            elif creator_id:
+                data = Songs.query.filter_by(creator_id=creator_id).first()
+            elif artist_id:
+                data = Songs.query.filter_by(artist_id=artist_id).first()
+            elif playlist_in:
+                data = Songs.query.filter_by(playlist_in=playlist_in).first()
+            elif album_in:
+                data = Songs.query.filter_by(album_in=album_in).first()
+            elif date_created:
+                data = Songs.query.filter_by(date_created=date_created).first()
+            else:
+                data = Songs.query.all()
 
         if data:
             return data, 200

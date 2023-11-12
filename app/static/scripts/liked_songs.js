@@ -100,12 +100,17 @@ forward10Sec.addEventListener("click", () => {
     }
 })
 
-let deleteSong = document.getElementsByClassName('musicDeleter')
-for (let i=0;i<deleteSong.length;i++){
-    deleteSong[i].addEventListener("click",()=>{
-        $.get(`/unlike-song?user_name=${deleteSong[i].getAttribute("data-user-name")}&song_id=${deleteSong[i].getAttribute("data-song-id")}`, function (data) {
+let musicUnliker = document.getElementsByClassName('musicUnliker')
+for (let i=0;i<musicUnliker.length;i++){
+    musicUnliker[i].addEventListener("click",()=>{
+        $.get(`/unlike-song?user_name=${musicUnliker[i].getAttribute("data-user-name")}&song_id=${musicUnliker[i].getAttribute("data-song-id")}`, function (data) {
             
         });
-        window.location.href = `/user/${deleteSong[i].getAttribute("data-user-name")}`
+        window.location.href = `/user/${musicUnliker[i].getAttribute("data-user-name")}`
     })
 }
+
+let search = document.getElementById("searchIcon")
+search.addEventListener("click",()=>{
+    window.location.href = "/user/Saransh%20Saini/search"
+})

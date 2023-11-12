@@ -1,0 +1,72 @@
+#searchIcon{
+    cursor: pointer;
+}
+.albumCont{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 1rem;
+    width: 12rem;
+    height: 14rem;
+    background-color: transparent;
+    border-radius: 1rem;
+    z-index: 0;
+    text-decoration: none;
+}
+.albumCont::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha (fourth) value for the desired level of transparency */
+    /* background-image: linear-gradient(180deg,#141414,rgb(215, 0, 183)); */
+    border-radius: 1rem;
+    z-index: -1;
+    /* background-color: aqua; */
+
+}
+.albumimg{
+    height: 70%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.albumImgAct{
+    width: auto;
+    height: 90%;
+}
+#musicContainer{
+    flex-direction: column;
+}
+#albumSuperCont{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: start;
+    width: 100%;
+    height: max-content;
+}
+.albumDetails{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    height: 30%;
+    width: 100%;
+    color: black;
+}
+.albumName{
+    padding-left:1rem ;
+    font-size: 1.2rem;
+}
+.albumArtist{
+    padding-left:1rem ;
+}
+.albumImgAct{
+    filter: grayscale(100%) brightness(1000);
+}

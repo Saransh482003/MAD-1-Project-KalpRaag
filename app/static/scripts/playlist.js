@@ -1,4 +1,3 @@
-
 let deletePlaylist = document.getElementById("delete")
 var playlistName = deletePlaylist.getAttribute("data-playlist-name")
 var user_name = deletePlaylist.getAttribute("data-user-name")
@@ -10,8 +9,10 @@ deletePlaylist.addEventListener("click",()=>{
 })
 
 let deleteSong = document.getElementsByClassName('musicDeleter')
+console.log(deleteSong)
 for (let i=0;i<deleteSong.length;i++){
     deleteSong[i].addEventListener("click",()=>{
+
         $.get(`/delete-song-from-playlist?playlist_name=${deleteSong[i].getAttribute("data-playlist-name")}&user_name=${deleteSong[i].getAttribute("data-user-name")}&song_id=${deleteSong[i].getAttribute("data-song-id")}`, function (data) {
             
         });
@@ -19,3 +20,8 @@ for (let i=0;i<deleteSong.length;i++){
         window.location.href = `/user/${user_name}/liked_songs`
     })
 }
+
+let search = document.getElementById("searchIcon")
+search.addEventListener("click",()=>{
+    window.location.href = "/user/Saransh%20Saini/search"
+})
