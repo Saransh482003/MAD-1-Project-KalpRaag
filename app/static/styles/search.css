@@ -42,12 +42,15 @@
 }
 #musicContainer{
     flex-direction: column;
+    flex-wrap: nowrap;
+    height: max-content;
 }
 #albumSuperCont{
     display: flex;
     flex-direction: row;
     justify-content: left;
     align-items: start;
+    flex-wrap: wrap;
     width: 100%;
     height: max-content;
 }

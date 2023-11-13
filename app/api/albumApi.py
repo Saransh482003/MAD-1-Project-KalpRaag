@@ -46,28 +46,33 @@ class albumTransaction(Resource):
         date_created = request.args.get('date_created')
         song_ids = request.args.get('song_ids')
         saved_by = request.args.get('saved_by')
+        key = request.args.get('key')
+        filterVal = request.args.get('filter')
 
-        if album_name and creator_id:
-            data = Album.query.filter_by(album_name=album_name, creator_id=creator_id).first()
+        if key and filterVal:
+            data = Album.query.filter(Album.album_name.ilike(f"%{key}%")).all()
         else:
-            if album_id:
-                data = Album.query.filter_by(album_id=album_id).first()
-            elif album_name:
-                data = Album.query.filter_by(album_name=album_name).first()
-            elif genre:
-                data = Album.query.filter_by(genre=genre).all()
-            elif artist_id:
-                data = Album.query.filter_by(artist_id=artist_id).all()
-            elif creator_id:
-                data = Album.query.filter_by(creator_id=creator_id).all()
-            elif date_created:
-                data = Album.query.filter_by(date_created=date_created).all()
-            elif song_ids:
-                data = Album.query.filter_by(song_ids=song_ids).all()
-            elif saved_by:
-                data = Album.query.filter_by(saved_by=saved_by).all()
+            if album_name and creator_id:
+                data = Album.query.filter_by(album_name=album_name, creator_id=creator_id).first()
             else:
-                data = Album.query.all()
+                if album_id:
+                    data = Album.query.filter_by(album_id=album_id).first()
+                elif album_name:
+                    data = Album.query.filter_by(album_name=album_name).first()
+                elif genre:
+                    data = Album.query.filter_by(genre=genre).all()
+                elif artist_id:
+                    data = Album.query.filter_by(artist_id=artist_id).all()
+                elif creator_id:
+                    data = Album.query.filter_by(creator_id=creator_id).all()
+                elif date_created:
+                    data = Album.query.filter_by(date_created=date_created).all()
+                elif song_ids:
+                    data = Album.query.filter_by(song_ids=song_ids).all()
+                elif saved_by:
+                    data = Album.query.filter(Album.saved_by.like(f"%{saved_by}%")).all()
+                else:
+                    data = Album.query.all()
 
         if data:
             return data, 200

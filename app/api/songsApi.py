@@ -58,7 +58,7 @@ class songTransaction(Resource):
         filterVal = request.args.get('filter')
 
         if key and filterVal:
-            data = Songs.query.filter(Songs.song_name.like(f"%{key}%")).all()
+            data = Songs.query.filter(Songs.song_name.ilike(f"%{key}%")).all()
         else: 
             if song_id:
                 data = Songs.query.filter_by(song_id=song_id).first()

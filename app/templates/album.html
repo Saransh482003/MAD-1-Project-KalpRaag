@@ -22,15 +22,21 @@
         </div>
         <div id="search">
             <div id="searchBox">
-                <div id="searchIcon">
+                <div id="searchIcon" data-user-name="{{user_name}}">
                     <img src="../../static/images/search.png" alt="Search Btn" id="searchIconImg">
                 </div>
+                <select id="filterList" >
+                    <option value="All">All</option>
+                    <option value="Song">Song</option>
+                    <option value="Album">Album</option>
+                    <option value="Rating">Rating</option>
+                    <option value="Genre">Genre</option>
+                    <option value="Artist">Artist</option>
+                </select>
                 <div id="type">
                     <input type="text" name="search" id="typeIn" placeholder="What's on your mind today?">
                 </div>
-
             </div>
-
         </div>
         <div id="links">
             <a href="#" class="link">Become a Creator</a>
@@ -70,11 +76,15 @@
             <div id="playlistDetails">
                 <h1 id="playlistName">
                     <img src="../../static/images/album.png" alt="" id="playlistIcon">
-                    {{albumData["album_name"]}}
+                    {{albumData["album_name"]}} | {{albumData["artist_id"]}}
                 </h1>
-                <div id="albumInfo">
-                    <p style="margin-left: 1rem; border-left: 0.2rem solid white;padding-left: 1rem;">{{albumData["genre"]}}</p>
-                    <p style="padding-left: 1rem;">{{albumData["artist_id"]}}</p>
+                <div id="deleteContainer">
+                    {% if saved == 1 %}
+                        <img src="../../static/images/save_full.png" alt="save" id="saver" data-album-name="{{albumData['album_name']}}"  data-user-name="{{user_name}}" data-status={{saved}}>
+                    {% else %}
+                        <img src="../../static/images/save_blank.png" alt="save" id="saver" data-album-name="{{albumData['album_name']}}"  data-user-name="{{user_name}}" data-status={{saved}}>
+                    {% endif %}
+
                 </div>
             </div>
             <div id="musicContainer">
@@ -145,6 +155,7 @@
     </section>
     <script src="../../static/scripts/liked_songs.js"></script>
     <script src="../../static/scripts/playlist.js"></script>
+    <script src="../../static/scripts/album.js"></script>
 
     <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
 </body>

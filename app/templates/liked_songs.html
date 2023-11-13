@@ -21,13 +21,20 @@
         </div>
         <div id="search">
             <div id="searchBox">
-                <div id="searchIcon">
+                <div id="searchIcon" data-user-name="{{user_name}}">
                     <img src="../../static/images/search.png" alt="Search Btn" id="searchIconImg">
                 </div>
+                <select id="filterList" >
+                    <option value="All">All</option>
+                    <option value="Song">Song</option>
+                    <option value="Album">Album</option>
+                    <option value="Rating">Rating</option>
+                    <option value="Genre">Genre</option>
+                    <option value="Artist">Artist</option>
+                </select>
                 <div id="type">
                     <input type="text" name="search" id="typeIn" placeholder="What's on your mind today?">
                 </div>
-
             </div>
 
         </div>

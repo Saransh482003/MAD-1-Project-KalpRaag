@@ -1,4 +1,7 @@
 let search = document.getElementById("searchIcon")
 search.addEventListener("click",()=>{
-    window.location.href = "/user/Saransh%20Saini/search"
+    let key = document.getElementById("typeIn").value
+    let searchType = document.getElementById("filterList").value
+
+    window.location.href = `./${search.getAttribute("data-user-name")}/search?filter=${searchType}&key=${key}`
 })
