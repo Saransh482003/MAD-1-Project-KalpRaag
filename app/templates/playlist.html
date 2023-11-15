@@ -38,7 +38,11 @@
             </div>
         </div>
         <div id="links">
-            <a href="#" class="link">Become a Creator</a>
+            {% if creator==0 %}
+                <a href="../creator-register?user_name={{user_data['user_name']}}" class="link">Become a Creator</a>
+            {% else %}
+                <a href="../creator/{{user_data['user_name']}}?creator_id={{user_data['creator_id']}}" class="link">Creator Mode</a>
+            {% endif %}
             <a href="/">Logout</a>
         </div>
     </nav>
@@ -151,8 +155,9 @@
             </div>
 
     </section>
-    <script src="../../static/scripts/playlist.js"></script>
     <script src="../../static/scripts/liked_songs.js"></script>
+    <script src="../../static/scripts/playlist.js"></script>
+    <script src="../../static/scripts/album.js"></script>
 
     <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
 </body>

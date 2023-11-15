@@ -54,4 +54,9 @@ class Album(db.Model):
 class Artists(db.Model):
     artist_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     artist_name = db.Column(db.String, nullable=False)
-    
+
+class Creator(db.Model):
+    creator_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    user_name = db.Column(db.Integer, unique=True,nullable=False)
+    song_ids = db.Column(db.String, nullable=False)
+    album_ids = db.Column(db.String, nullable=False) 

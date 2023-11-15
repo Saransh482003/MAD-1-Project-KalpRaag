@@ -7,7 +7,10 @@
     <title>KalpRaag : A Music Screaming Platform</title>
     <link rel="stylesheet" href="../../static/styles/index.css">
     <link rel="stylesheet" href="../../static/styles/user.css">
-    <link rel="stylesheet" href="../../static/styles/add_playlist.css">
+    <link rel="stylesheet" href="../../static/styles/playlist.css">
+    <link rel="stylesheet" href="../../static/styles/album.css">
+    <link rel="stylesheet" href="../../static/styles/creator_dash.css">
+    <link rel="stylesheet" href="../../static/styles/add_album.css">
     <link rel="icon" href="../../static/images/KalpRaag Logo Rounded.png">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -38,11 +41,7 @@
             </div>
         </div>
         <div id="links">
-            {% if creator==0 %}
-                <a href="../creator-register?user_name={{user_data['user_name']}}" class="link">Become a Creator</a>
-            {% else %}
-                <a href="../creator/{{user_data['user_name']}}?creator_id={{user_data['creator_id']}}" class="link">Creator Mode</a>
-            {% endif %}
+            <a href="../../user/{{user_name}}" class="link">User Mode</a>
             <a href="/">Logout</a>
         </div>
     </nav>
@@ -50,36 +49,42 @@
     <section id="main">
         <div id="navigator">
             <div id="library">
-                <a href="../{{user_name}}" data-user={{user_name}} id="song_menu" style="text-decoration: none;color: white;font-size: 1.5rem;">Song Menu &nbsp;&#11166;</a>
                 <h1>Your Library &nbsp;&#11166;</h1>
-                <a href="../{{user_name}}/liked_songs" class="linkContainer">
-                    <img src="../../static/images/full_heart.png" alt="" class="navImgs">
-                    <h3 class="links">Liked Songs</h3>
-                </a>
                 <div class="linkContainer">
-                    <img src="../../static/images/playlist.png" alt="" class="navImgs">
-                    <h3 class="links">Playlists</h3>
+                    <img src="../../static/images/play.png" alt="" class="navSuper">
+                    <h3 class="links">Uploaded Songs</h3>
                 </div>
-                <a href="../{{user_name}}/add_playlist" class="playlists">&#x2b;&ensp;Create Playlist</a>
-                {% for playlist in playlists %}
-                    <a href="../{{user_name}}/playlists?playlist_id={{playlist['playlist_id']}}&user_name={{user_name}}" class="playlists">&#11166;&ensp;{{playlist["playlist_name"]}}</a>
+
+                {% for i in song_ids %}
+                    <div class="navImgs indexer songPlayer playlists" style="height: max-content;width: max-content;margin-left:5rem" data-song-id="{{i['song_id']}}" data-user-name="{{user_name}}">&#11166;&ensp;{{i["song_name"][0]|upper}}{{i["song_name"][1:]}}</div>
                 {% endfor %}
 
                 <div class="linkContainer">
-                    <img src="../../static/images/album.png" alt="" class="navImgs">
-                    <h3 class="links">Saved Albums</h3>
+                    <img src="../../static/images/album.png" alt="" class="navSuper">
+                    <h3 class="links">Created Albums</h3>
                 </div>
-                {% for album in albums %}
-                    <a href="../{{user_name}}/album?album_id={{album['album_id']}}" class="playlists">&#11166;&ensp;{{album["album_name"]}}</a>
-                {% endfor %}
+                {% for i in album_ids %}
+                    <div class="navImgs indexer albumPlayer playlists" style="height: max-content;width: max-content;margin-left:5rem" data-album-id="{{i['album_id']}}" data-user-name="{{user_name}}">&#11166;&ensp;{{i["album_name"][0]|upper}}{{i["album_name"][1:]}}</div>
+                <script src="../../static/scripts/creator_alternate.js"></script>
+            {% endfor %}
             </div>
         </div>
         <div id="musicBody">
-            <div id="musicContainer">
-                <img src="../../static/images/create.png" alt="" id="creator">
-                <input type="text" id="newName" placeholder="Enter New Playlist Name">
-                <div id="createBtn" data-user={{user_name}}>Create Playlist</div>
-            </div>
+            <form action="./add-album-form" method="POST">
+                <label for="title" class="labeler">Title</label>
+                <input type="text" class="inputer" name="title" placeholder="Enter Album Title">
+                <label for="artist" class="labeler">Artist</label>
+                <input type="text" class="inputer" name="artist" placeholder="Enter Album Artist">
+                <label for="genre" class="labeler">Genre</label>
+                <input type="text" class="inputer" name="genre" placeholder="Enter Album Genre">
+                <label for="songList" class="labeler">Pick songs for this album</label>
+                <select id="songList" name="songList" multiple>
+                    {% for song in song_ids %}
+                        <option value="{{song['song_id']}}">{{song["song_name"][0]|upper}}{{song["song_name"][1:]}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Create Album" id="submitBtn">
+            </form>
         </div>
     </section>
     <section id="musicPlayer">
@@ -119,8 +124,13 @@
             </div>
 
     </section>
-    <script src="../../static/scripts/liked_songs.js"></script>
-    <script src="../../static/scripts/add_playlist.js"></script>
+    <!-- <script src="../../static/scripts/index.js"></script> -->
+
+    <!-- <script src="../../static/scripts/liked_songs.js"></script> -->
+    <!-- <script src="../../static/scripts/playlist.js"></script> -->
+    <!-- <script src="../../static/scripts/album.js"></script> -->
+    <script src="../../static/scripts/creator_dash.js"></script>
+    <script src="../../static/scripts/creator_alternate.js"></script>
 
     <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
 </body>

@@ -21,7 +21,7 @@ user_post.add_argument("playlists", type=str, help="Enter playlist")
 
 user_put = reqparse.RequestParser()
 user_put.add_argument("creator_id", type=int, help="Enter creator id")
-user_put.add_argument("playlists", type=str, help="Enter playlist")
+# user_put.add_argument("playlists", type=str, help="Enter playlist")
 class userTransaction(Resource):
     @marshal_with(returner)
     def get(self):
@@ -83,13 +83,14 @@ class userTransaction(Resource):
         abort(400,message="User Name exists.")
 
     @marshal_with(returner)
-    def put(self,user_id):
+    def put(self):
         req = user_put.parse_args()
-        fetcher = Users.query.filter_by(user_id=user_id).first()
+        user_name = request.args.get("user_name")
+        fetcher = Users.query.filter_by(user_name=user_name).first()
         if req["creator_id"]:
             fetcher.creator_id = req["creator_id"]
-        elif req["playlists"]:
-            fetcher.playlists = req["playlists"]
+        # elif req["playlists"]:
+        #     fetcher.playlists = req["playlists"]
         db.session.commit()
         return fetcher, 200
     

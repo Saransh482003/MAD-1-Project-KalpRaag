@@ -32,6 +32,8 @@ song_post.add_argument("playlist_in", type=int,
                        help="Enter song playlist_in", required=True)
 song_post.add_argument("album_in", type=int,
                        help="Enter song album_in", required=True)
+song_post.add_argument("date_created", type=str,
+                       help="Enter song date_created", required=True)
 
 song_put = reqparse.RequestParser()
 song_put.add_argument("song_name", type=str, help="Enter song name")
@@ -41,6 +43,8 @@ song_put.add_argument("creator_id", type=int, help="Enter song creator_id")
 song_put.add_argument("artist_id", type=int, help="Enter song artist_id")
 song_put.add_argument("playlist_in", type=int, help="Enter song playlist_in")
 song_put.add_argument("album_in", type=int, help="Enter song album_in")
+song_post.add_argument("date_created", type=str,
+                       help="Enter song date_created")
 
 
 class songTransaction(Resource):
@@ -56,7 +60,7 @@ class songTransaction(Resource):
         date_created = request.args.get('date')
         key = request.args.get('key')
         filterVal = request.args.get('filter')
-
+        print(song_id,type(song_id))
         if key and filterVal:
             data = Songs.query.filter(Songs.song_name.ilike(f"%{key}%")).all()
         else: 

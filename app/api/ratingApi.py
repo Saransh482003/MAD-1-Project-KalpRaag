@@ -66,7 +66,7 @@ class ratingTransaction(Resource):
         if (fetcher == None):
             ratingEntry = Rating(
                 song_id=req["song_id"],
-                rating=req["rating"].lower(),
+                rating=req["rating"],
                 love=req["love"],
                 user_name=req["user_name"],
             )
