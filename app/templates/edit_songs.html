@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KalpRaag : A Music Screaming Platform</title>
+    <title>KalpRaag : A Music Streaming Platform</title>
     <link rel="stylesheet" href="../../static/styles/index.css">
     <link rel="stylesheet" href="../../static/styles/user.css">
     <link rel="stylesheet" href="../../static/styles/playlist.css">
     <link rel="stylesheet" href="../../static/styles/album.css">
     <link rel="stylesheet" href="../../static/styles/creator_dash.css">
+    <link rel="stylesheet" href="../../static/styles/add_song.css">
     <link rel="icon" href="../../static/images/KalpRaag Logo Rounded.png">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -40,7 +41,7 @@
             </div>
         </div>
         <div id="links">
-            <a href="../user/{{user_data['user_name']}}" class="link">User Mode</a>
+            <a href="../../user/{{user_name}}" class="link">User Mode</a>
             <a href="/">Logout</a>
         </div>
     </nav>
@@ -64,88 +65,34 @@
                 </div>
                 {% for i in album_ids %}
                     <div class="navImgs indexer albumPlayer playlists" style="height: max-content;width: max-content;margin-left:5rem" data-album-id="{{i['album_id']}}" data-user-name="{{user_name}}">&#11166;&ensp;{{i["album_name"][0]|upper}}{{i["album_name"][1:]}}</div>
-                <!-- <script src="../../static/scripts/creator_alternate.js"></script> -->
+                <script src="../../static/scripts/creator_alternate.js"></script>
             {% endfor %}
             </div>
         </div>
         <div id="musicBody">
-            <!-- {% set playlistName = playlistName|replace('%20',' ') %} -->
-            <div id="playlistDetails">
-                <h1 id="playlistName">
-                    <img src="../../static/images/Dashboard.png" alt="" id="playlistIcon">
-                    Dashboard
-                </h1>
-            </div>
-            <div id="dashboard">
-                <div class="card">
-                    <h1 class="cardHeader">Total Songs Uploaded</h1>
-                    <div class="cardInfo">{{stats["song_count"]}}</div>
+            <div id="musicContainer">
+                <div id="playlistDetails">
+                    <h1 id="playlistName">
+                        <img src="../../static/images/play.png" alt="" id="playlistIcon">
+                        {{songData["song_name"][0]|upper}}{{songData["song_name"][1:]}}
+                    </h1>
                 </div>
-                <div class="card">
-                    <h1 class="cardHeader">Total Albums Uploaded</h1>
-                    <div class="cardInfo">{{stats["album_count"]}}</div>
+                <div id="former">
+                    <form action="/{{user_name}}/edit-song-form?song_id={{songData['song_id']}}" method="POST" style="margin-top: 0rem;">
+                        <label for="title" class="labeler">Title</label>
+                        <input type="text" class="inputer" name="title" placeholder="Enter Song Title" value="{{songData['song_name']}}">
+                        <label for="artist" class="labeler">Artist</label>
+                        <input type="text" class="inputer" name="artist" placeholder="Enter Song Artist" value="{{artist_name}}">
+                        <label for="date" class="labeler">Release Date</label>
+                        <input type="date" class="inputer" name="date">
+                        <label for="lyrics" class="labeler">Upload Lyrics</label>
+                        <textarea id="lyricUploader" name="lyrics" >{{lyrics}}</textarea>
+                        <input type="submit" value="Edit Song" id="submitBtn">
+                    </form>
                 </div>
-                <div class="card">
-                    <h1 class="cardHeader">Total Likes</h1>
-                    <div class="cardInfo">{{stats["total_likes"]}}</div>
-                </div>
-                <div class="card">
-                    <h1 class="cardHeader">Average Songs Rating</h1>
-                    <div class="cardInfo">{{stats["avg_rating"]}}</div>
-                </div>
-                <div class="card">
-                    <h1 class="cardHeader">Average Album Saves</h1>
-                    <div class="cardInfo">{{stats["avg_album"]}}</div>
-                </div>
-            </div>
-            <div id="logSelection">
-                {% if window=="songs" %}
-                    <div id="signin" data-creator-id={{creator_id}} data-user-name="{{user_name}}">Songs</div>
-                    <div id="signup" data-creator-id={{creator_id}} data-user-name="{{user_name}}">Albums</div>
-                {% else %}
-                    <div id="songs" data-creator-id={{creator_id}} data-user-name="{{user_name}}">Songs</div>
-                    <div id="albums" data-creator-id={{creator_id}} data-user-name="{{user_name}}">Albums</div>
-                    <!-- <script src="../../static/scripts/creator_alternate.js"></script> -->
-                {% endif %}
 
             </div>
-            <div id="contentDroper">
-                {% if window=="songs" %}
-                    <a href="./{{user_name}}/add-song" id="songer">
-                        + Add Song
-                    </a>
-                    {% for i in song_ids %}
-                        <div class="songer">
-                            <div class="songDetails">
-                                <img src="../../static/images/play.png" alt="" class="navImgs indexer songPlayer" data-song-id="{{i['song_id']}}" data-user-name="{{user_name}}">
-                                <p class="song_name">{{i["song_name"][0]|upper}}{{i["song_name"][1:]}}</p>
-                            </div>
-                            <div class="songControls">
-                                <img src="../../static/images/edit.png" alt="" class="navImgs indexer songEditer" data-song-id="{{i['song_id']}}" data-user-name="{{user_name}}" >
-                                <img src="../../static/images/delete.png" alt="" class="navImgs indexer songDeleter" data-song-id="{{i['song_id']}}" data-user-name="{{user_name}}">
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <a href="./{{user_name}}/create-album" id="songer">
-                        + Add Album
-                    </a>
-                    {% for i in album_ids %}
-                        <div class="songer">
-                            <div class="songDetails">
-                                <img src="../../static/images/album.png" alt="" class="navImgs indexer albumPlayer" data-album-id="{{i['album_id']}}" data-user-name="{{user_name}}">
-                                <p class="song_name">{{i["album_name"][0]|upper}}{{i["album_name"][1:]}}</p>
-                            </div>
-                            <div class="songControls">
-                                <img src="../../static/images/edit.png" alt="" class="navImgs indexer albumEditer"  data-album-id="{{i['album_id']}}" data-user-name="{{user_name}}" >
-                                <img src="../../static/images/delete.png" alt="" class="navImgs indexer albumDeleter"  data-album-id="{{i['album_id']}}" data-user-name="{{user_name}}" >
-                            </div>
-                        </div>
-                        <script src="../../static/scripts/creator_alternate.js"></script>
-                    {% endfor %}
-                {% endif %}
 
-            </div>
         </div>
     </section>
     <section id="musicPlayer">
@@ -155,6 +102,7 @@
             <div id="musicContentBottom">
                 <p id="musicNameBottom"></p>
                 <p id="musicArtistBottom"></p>
+                <!-- <p id="musicDurationBottom"></p> -->
             </div>
         </div>
         <div id="playBtns">

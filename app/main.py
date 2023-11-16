@@ -163,8 +163,9 @@ def playlist(user_name):
     if song_ids != "":
         for i in song_ids.split(","):
             songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
-            songData = requests.get(songFetcher).json()
-            songs.append(songData)
+            songData = requests.get(songFetcher)
+            if songData.status_code==200:
+                songs.append(songData.json())
     # print(playlistData["playlist_name"])
     playlistName = "%20".join(playlistData["playlist_name"].split(" "))
     albumFetcher = f"http://127.0.0.1:5000/api/album?saved_by={user_name}"
@@ -285,8 +286,9 @@ def album(user_name):
     if song_ids != "":
         for i in song_ids.split(","):
             songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
-            songData = requests.get(songFetcher).json()
-            songs.append(songData)
+            songData = requests.get(songFetcher)
+            if songData.status_code==200:
+                songs.append(songData.json())
     # print(songs)
     userFetcher = f"http://127.0.0.1:5000/api/user?user_name={user_name}"
     userData = requests.get(userFetcher).json()
@@ -615,7 +617,7 @@ def add_song_form(user_name):
             lyricsStringer = data["lyrics"]
             # lyricsStringer = lyricsStringer.replace("\n\n","\n#spacex\n")
 
-            file_path = f"app/static/lyrics/lyrics_{songFetchData.json()['song_name']}.txt"
+            file_path = f"app/static/lyrics/lyrics_{songFetchData.json()['song_id']}.txt"
             with open(file_path, 'w') as file:
                 file.write(lyricsStringer)
             lyricsPost = f"http://127.0.0.1:5000/api/lyrics"
@@ -638,6 +640,133 @@ def add_song_form(user_name):
         }
         creatorPutter = f"http://127.0.0.1:5000/api/creator"
         creatorRespo = requests.put(creatorPutter,json=entry)
+    return redirect(f"/creator/{user_name}?creator_id={creatorData['creator_id']}")
+
+@app.route("/creator/<user_name>/edit-song")
+def edit_song(user_name):
+    song_id = request.args.get("song_id")
+    songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(song_id)}"
+    songDataFetcher = requests.get(songFetcher).json()
+
+    artistFetcher = f"http://127.0.0.1:5000/api/artist?artist_id={songDataFetcher['artist_id']}"
+    artistData = requests.get(artistFetcher).json()
+
+    lyricsFetcher = f"http://127.0.0.1:5000/api/lyrics?song_id={songDataFetcher['song_id']}"
+    lyricsData = requests.get(lyricsFetcher).json()
+    
+    file_path = lyricsData["lyrics_path"]
+    with open(file_path, 'r') as file:
+        lyrics = file.read()
+
+    creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
+    creatorData = requests.get(creatorFetcher).json()
+    song_ids = creatorData["song_ids"].split(",")
+    album_ids = creatorData["album_ids"].split(",")
+    song_retter = []
+    album_retter = []
+    for i in song_ids:
+        songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
+        songData = requests.get(songFetcher)
+        if songData.status_code==200:
+            song_retter.append(songData.json())
+
+    for i in album_ids:
+        albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={int(i)}"
+        albumData = requests.get(albumFetcher)
+        if albumData.status_code==200:
+            album_retter.append(albumData.json())
+    return render_template("edit_songs.html",user_name=user_name,song_ids=song_retter,album_ids=album_retter,songData=songDataFetcher,artist_name=artistData["artist_name"],lyrics=lyrics)
+
+@app.route("/<user_name>/edit-song-form",methods=["GET","POST"])
+def edit_song_form(user_name):
+    song_id = request.args.get("song_id")
+    data = request.form
+
+    artist_id = 0
+    artistFetcher = f"http://127.0.0.1:5000/api/artist?artist_name={data['artist']}"
+    artistData = requests.get(artistFetcher)
+    if artistData.status_code==200:
+        artist_id=artistData.json()["artist_id"]
+    else:
+        artistPost = f"http://127.0.0.1:5000/api/artist"
+        artistEntry = {
+            "artist_name":data["artist"]
+        }
+        repo = requests.post(artistPost,json=artistEntry)
+        if repo.status_code==200:
+            artistFetcher = f"http://127.0.0.1:5000/api/artist?artist_name={data['artist']}"
+            artistData = requests.get(artistFetcher)
+            artist_id = artistData.json()["artist_id"]
+    
+    songFetcher = f"http://127.0.0.1:5000/api/songs?id={song_id}"
+    songData = requests.get(songFetcher).json()
+    songPut = f"http://127.0.0.1:5000/api/songs?id={song_id}"
+    songEntry={
+        "song_name":data["title"],
+        "lyrics_id":0,
+        "duration":0,
+        "creator_id":songData["creator_id"],
+        "artist_id":artist_id,
+        "playlist_in":0,
+        "album_in":0,
+        "date_created":f"{data['date']}",
+    }
+    songResponse = requests.put(songPut,json=songEntry)
+    if songResponse.status_code==200:
+        songFetcher = f"http://127.0.0.1:5000/api/songs?name={data['title']}"
+        songFetchData = requests.get(songFetcher)
+
+        if songFetchData.status_code==200:
+            lyricsStringer = data["lyrics"]
+            
+            lyricsFetcher = f"http://127.0.0.1:5000/api/lyrics?song_id={song_id}"
+            lyricsData = requests.get(lyricsFetcher).json()
+
+
+            file_path = f"app/static/lyrics/lyrics_{songFetchData.json()['song_id']}.txt"
+            with open(file_path, 'w') as file:
+                file.write(lyricsStringer)
+            lyricsPut = f"http://127.0.0.1:5000/api/lyrics?id={lyricsData['lyrics_id']}"
+            lyricsEntry = {
+                "lyrics_path":file_path,
+                "song_id":songFetchData.json()['song_id']
+            }
+            lyricsResponse = requests.put(lyricsPut,json=lyricsEntry)
+            if lyricsResponse.status_code==400:
+                return {"message":"may day"}
+
+    return redirect(f"/creator/{user_name}?creator_id={songData['creator_id']}")
+
+@app.route("/creator/<user_name>/delete-song")
+def delete_song(user_name):
+    song_id = request.args.get("song_id")
+    songFetcher = f"http://127.0.0.1:5000/api/songs?id={song_id}"
+    songData = requests.get(songFetcher).json()
+
+    lyricsFetcher = f"http://127.0.0.1:5000/api/lyrics?song_id={song_id}"
+    lyricsDeleter = requests.delete(lyricsFetcher)
+
+    artistFetcher = f"http://127.0.0.1:5000/api/artist?artist_id={songData['artist_id']}"
+    artistDeleter = requests.delete(artistFetcher)
+
+    ratingFetcher = f"http://127.0.0.1:5000/api/rating?song_id={song_id}"
+    ratingDeleter = requests.delete(ratingFetcher)
+
+    songDeleter = requests.delete(songFetcher)
+
+    creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
+    creatorData = requests.get(creatorFetcher).json()
+    song_ids = creatorData["song_ids"].split(",")
+    song_ids.remove(song_id)
+    creatorPut = f"http://127.0.0.1:5000/api/creator"
+    creatorEntry = {
+        "user_name":user_name,
+        "song_ids":",".join(song_ids),
+        "album_ids":creatorData["album_ids"]
+    }
+    creatorRespo = requests.put(creatorPut,json=creatorEntry)
+    if creatorRespo.status_code==400:
+        return {"message":"may day!!"}
     return redirect(f"/creator/{user_name}?creator_id={creatorData['creator_id']}")
 
 @app.route("/creator/<user_name>/create-album",methods=["GET","POST"])

@@ -118,6 +118,7 @@ class songTransaction(Resource):
         if fetcher:
             for i in req:
                 setattr(fetcher,i,req[i])
+            db.session.commit()
             fetcher = Songs.query.filter_by(song_id=song_id).first()
             return fetcher, 200
         abort(400, message="Song do not exit")
@@ -126,8 +127,10 @@ class songTransaction(Resource):
         song_id = request.args.get('id')
         song_id = song_id if song_id!=None else ""
         fetcher = Songs.query.filter_by(song_id=song_id).first() 
+        print(song_id,fetcher)
         if fetcher:
             db.session.delete(fetcher)
+            db.session.commit()
             return {f"Song ID : {song_id} deleted"}, 200
         abort(400, message="Song do not exits")
 

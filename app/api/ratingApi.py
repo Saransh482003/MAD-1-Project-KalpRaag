@@ -93,7 +93,7 @@ class ratingTransaction(Resource):
     def delete(self):
         song_id = request.args.get('song_id')
         song_id = song_id if song_id!=None else ""
-        fetcher = Rating.query.filter_by(song_id=song_id)
+        fetcher = Rating.query.filter_by(song_id=song_id).all()
         if fetcher:
             for i in fetcher:
                 db.session.delete(i)

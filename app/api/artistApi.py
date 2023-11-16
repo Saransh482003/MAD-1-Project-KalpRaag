@@ -63,13 +63,13 @@ class artistTransaction(Resource):
         abort(400, message= "Artists do not exit")
 
     def delete(self):
-        artist_name = request.args.get('artist_name')
-        artist_name = artist_name if artist_name!=None else ""
-        fetcher = Artists.query.filter_by(artist_name=artist_name).first()
+        artist_id = request.args.get('artist_id')
+        artist_id = artist_id if artist_id!=None else ""
+        fetcher = Artists.query.filter_by(artist_id=artist_id).first()
         if fetcher:
             db.session.delete(fetcher)
             db.session.commit()
-            return {f"Album Name : {artist_name} deleted"}, 200
+            return {f"Album Name : {artist_id} deleted"}, 200
         abort(400, message= "Artists do not exits")
 
 

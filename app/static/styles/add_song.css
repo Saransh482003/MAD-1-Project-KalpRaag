@@ -3,6 +3,7 @@
     flex-direction: column;
     /* justify-content: center; */
     align-items: center;
+    height: 100%;
 }
 form{
     display: flex;
@@ -79,4 +80,22 @@ form{
 #fruits{
     display: flex;
     flex-direction: column;
+}
+#playlistDetails{
+    display: flex;
+    flex-direction: column;
+    height: 3rem;
+    width: 80%;
+    /* height: 5rem; */
+}
+#playlistName{
+    height: 100%;
+    width: 100%;
+}
+#former{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }

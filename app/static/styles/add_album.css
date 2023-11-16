@@ -58,7 +58,7 @@ form{
 #songList{
     margin-top: 1rem;
     width: 50%;
-    height: 5rem;
+    height: 10rem;
     border-radius: 0.5rem;
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     font-family: "Poppins";
@@ -70,8 +70,9 @@ form{
     border-radius: 0.2rem;
     padding-left: 0.3rem;
     padding-right: 0.3rem;
-
-    /* background-color: blanchedalmond; */
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    
 }
 /* #songList option{
     background-color: aqua;

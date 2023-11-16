@@ -71,12 +71,12 @@ class lyricsTransaction(Resource):
         abort(400, message="Lyrics do not exit")
 
     def delete(self):
-        lyrics_id = request.args.get('id')
-        lyrics_id = lyrics_id if lyrics_id!=None else ""
-        fetcher = Lyrics.query.filter_by(lyrics_id=lyrics_id).first() 
+        song_id = request.args.get('song_id')
+        song_id = song_id if song_id!=None else ""
+        fetcher = Lyrics.query.filter_by(song_id=song_id).first() 
         if fetcher:
             db.session.delete(fetcher)
-            return {f"Song ID : {lyrics_id} deleted"}, 200
+            return {f"Song ID : {song_id} deleted"}, 200
         abort(400, message="Lyrics do not exits")
 
 
