@@ -101,24 +101,25 @@ class albumTransaction(Resource):
 
     @marshal_with(returner)
     def put(self):
+        album_id = request.args.get("album_id")
         req = album_put.parse_args()
-        fetcher = Album.query.filter_by(album_name=req["album_name"]).first()
+        fetcher = Album.query.filter_by(album_id=album_id).first()
         if fetcher:
             for i in req:
                 setattr(fetcher,i,req[i])
             db.session.commit()
-            fetcher = Album.query.filter_by(album_name=req["album_name"]).first()
+            fetcher = Album.query.filter_by(album_id=album_id).first()
             return fetcher, 200
         abort(400, message= "Album do not exit")
 
     def delete(self):
-        album_name = request.args.get('album_name')
-        album_name = album_name if album_name!=None else ""
-        fetcher = Album.query.filter_by(album_name=album_name).first()
+        album_id = request.args.get('album_id')
+        album_id = album_id if album_id!=None else ""
+        fetcher = Album.query.filter_by(album_id=album_id).first()
         if fetcher:
             db.session.delete(fetcher)
             db.session.commit()
-            return {f"Album Name : {album_name} deleted"}, 200
+            return {f"Album Name : {album_id} deleted"}, 200
         abort(400, message= "Album do not exits")
 
 

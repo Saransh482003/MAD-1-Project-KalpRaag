@@ -302,16 +302,16 @@ def save_album():
     status = int(request.args.get("status"))
     albumFetcher = f"http://127.0.0.1:5000/api/album?album_name={album_name}"
     albumData = requests.get(albumFetcher).json()
-    url = "http://127.0.0.1:5000/api/album"
-    print(status)
-    print(albumData)
+    url = f"http://127.0.0.1:5000/api/album?album_id={albumData['album_id']}"
+    # print(status)
+    # print(albumData)
     if status==1:
-        print(albumData["saved_by"])
+        # print(albumData["saved_by"])
         saved_by = albumData["saved_by"].split(",")
-        print(saved_by)
+        # print(saved_by)
         if user_name not in saved_by:
             saved_by.append(user_name)
-        print(saved_by)
+        # print(saved_by)
         entry = {
             "album_id": albumData["album_id"],
             "album_name": albumData["album_name"],
@@ -746,11 +746,6 @@ def delete_song(user_name):
     lyricsFetcher = f"http://127.0.0.1:5000/api/lyrics?song_id={song_id}"
     lyricsDeleter = requests.delete(lyricsFetcher)
 
-    artistFetcher = f"http://127.0.0.1:5000/api/artist?artist_id={songData['artist_id']}"
-    artistDeleter = requests.delete(artistFetcher)
-
-    ratingFetcher = f"http://127.0.0.1:5000/api/rating?song_id={song_id}"
-    ratingDeleter = requests.delete(ratingFetcher)
 
     songDeleter = requests.delete(songFetcher)
 
@@ -844,6 +839,108 @@ def add_album_form(user_name):
         if creatorRespo.status_code==400:
             return {"message":"may day!!!"}
     return redirect(f"/creator/{user_name}?creator_id={creatorData['creator_id']}&window=album")
+
+@app.route("/creator/<user_name>/edit-album")
+def edit_album(user_name):
+    album_id = request.args.get("album_id")
+    albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={album_id}"
+    albumFetchedData = requests.get(albumFetcher).json()
+
+    artistFetcher = f"http://127.0.0.1:5000/api/artist?artist_id={albumFetchedData['artist_id']}"
+    artistData = requests.get(artistFetcher)
+    artist = artistData.json()["artist_name"]
+
+    songList = []
+    for i in albumFetchedData["song_ids"].split(","):
+        songFarFetch = f"http://127.0.0.1:5000/api/songs?id={i}"
+        songFarData = requests.get(songFarFetch)
+        if songFarData.status_code==200:
+            songList.append(songFarData.json())
+
+    creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
+    creatorData = requests.get(creatorFetcher).json()
+    song_ids = creatorData["song_ids"].split(",")
+    album_ids = creatorData["album_ids"].split(",")
+    song_retter = []
+    album_retter = []
+    for i in song_ids:
+        songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
+        songData = requests.get(songFetcher)
+        if songData.status_code==200:
+            song_retter.append(songData.json())
+
+    for i in album_ids:
+        albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={int(i)}"
+        albumData = requests.get(albumFetcher)
+        if albumData.status_code==200:
+            album_retter.append(albumData.json())
+    return render_template("edit_album.html",albumData=albumFetchedData,user_name=user_name,song_ids=song_retter,album_ids=album_retter,songList=songList,artist_name=artist)
+
+@app.route("/edit-album-form",methods=["POST","GET"])
+def edit_album_form():
+    album_id = request.args.get("album_id")
+    user_name = request.args.get("user_name")
+    creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
+    creatorData = requests.get(creatorFetcher).json()
+    albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={int(album_id)}"
+    albumData = requests.get(albumFetcher).json()
+    title = request.form["title"]
+    genre = request.form["genre"]
+    artist = request.form["artist"]
+    artistFetcher = f"http://127.0.0.1:5000/api/artist?artist_name={artist}"
+    artistData = requests.get(artistFetcher)
+    if artistData.status_code==200:
+        artist_id = artistData.json()["artist_id"]
+    else:
+        artistPoster = f"http://127.0.0.1:5000/api/artist"
+        artistEntry = {
+            "artist_name":artist
+        }
+        artistRespo = requests.post(artistPoster,json=artistEntry)
+        if artistRespo.status_code==200:
+            artistFetcher = f"http://127.0.0.1:5000/api/artist?artist_name={artist}"
+            artistData = requests.get(artistFetcher)
+            artist_id = artistData.json()["artist_id"]
+
+    songList = request.form.getlist("songList")
+    # print(songList)
+    albumPuter = f"http://127.0.0.1:5000/api/album?album_id={int(album_id)}"
+    albumEntry = {
+        "album_name":title,
+        "genre":genre,
+        "artist_id":artist_id,
+        "creator_id":albumData["creator_id"],
+        "date_created":albumData["date_created"],
+        "song_ids":",".join(songList),
+        "saved_by":albumData["saved_by"],
+    }
+    albumRepos = requests.put(albumPuter,json=albumEntry)
+    if albumRepos.status_code==400:
+        return {"message":"may day !!"}
+    return redirect(f"/creator/{user_name}?creator_id={creatorData['creator_id']}&window=album")
+
+@app.route("/creator/<user_name>/delete-album")
+def delete_album(user_name):
+    creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
+    creatorData = requests.get(creatorFetcher).json()
+    album_id = request.args.get("album_id")
+    albumDeleter = f"http://127.0.0.1:5000/api/album?album_id={int(album_id)}"
+    albumRespo = requests.delete(albumDeleter)
+
+    album_ids = creatorData["album_ids"].split(",")
+    album_ids.remove(album_id)
+    creatorPut = f"http://127.0.0.1:5000/api/creator"
+    creatorEntry = {
+        "user_name":user_name,
+        "song_ids":creatorData["song_ids"],
+        "album_ids":",".join(album_ids)
+    }
+    creatorRespo = requests.put(creatorPut,json=creatorEntry)
+    if creatorRespo.status_code==400:
+        return {"message":"may day!!"}
+    return redirect(f"/creator/{user_name}?creator_id={creatorData['creator_id']}&window=album")
+
+
 
 @app.route("/songpopulator")
 def singer():

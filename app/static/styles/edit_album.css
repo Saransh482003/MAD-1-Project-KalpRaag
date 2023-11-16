@@ -1,0 +1,11 @@
+#songsList{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: max-content;
+    width: 100%;
+}
+#musicContainer{
+    width: 100%;
+    height: max-content;
+}
