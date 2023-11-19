@@ -1,0 +1,40 @@
+
+.deleteSong{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    background-color: red;
+    border-bottom-left-radius: 1rem;
+    text-decoration: none;
+}
+.flagSong{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    background-color: rgb(250, 137, 0);
+    border-bottom-right-radius: 1rem;
+    text-decoration: none;
+}
+.musicControl{
+    height: 80%;
+    width: auto;
+    filter: grayscale(100%) brightness(1000);
+}
+.musicDeleter{
+    background-color: transparent;
+}
+#main{
+    height: 78vh;
+}
+#navigator{
+    height: 78vh;
+}
+#musicContainer{
+    margin-bottom: 0rem;
+}

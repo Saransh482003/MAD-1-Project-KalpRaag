@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KalpRaag : A Music Screaming Platform</title>
+    <title>KalpRaag : A Music Streaming Platform</title>
     <link rel="stylesheet" href="../static/styles/index.css">
+    <link rel="stylesheet" href="../static/styles/admin_signin.css">
     <link rel="icon" href="../static/images/KalpRaag Logo Rounded.png">
 </head>
 
@@ -17,7 +18,7 @@
             <!-- <p>Kalp राग</p> -->
         </div>
         <div id="links">
-            <a href="/admin-signin">Admin Sign In</a>
+            <a href="/admin-signin">User Sign In</a>
         </div>
     </nav>
     <!-- <hr> -->
@@ -28,12 +29,11 @@
             </div>
             <div id="sign">
                 <div id="logSelection">
-                    <div id="signin" onclick="signin()">Sign In</div>
-                    <div id="signup" onclick="signup()">Sign Up</div>
+                    <div id="signin" onclick="signin()">Admin Sign In</div>
                 </div>
                 <div id="logContent">
-                    <h1 id="loggerHead">Welcome Back to the <span>Raag!!</span></h1>
-                    <form action="/signin" method="POST" id="logger">
+                    <h1 id="loggerHead">Welcome Back <span>Admin</span></h1>
+                    <form action="/admin-signin-form" method="POST" id="logger">
                         <input type="text" name="name" id="name" placeholder="Username">
                         <input type="password" name="password" id="password" placeholder="Password">
                         <input type="submit" value="CONTINUE" id="subBtn">

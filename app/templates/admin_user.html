@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="../../static/styles/playlist.css">
     <link rel="stylesheet" href="../../static/styles/album.css">
     <link rel="stylesheet" href="../../static/styles/creator_dash.css">
-    <link rel="stylesheet" href="../../static/styles/add_album.css">
+    <link rel="stylesheet" href="../../static/styles/admin_dash.css">
+    <link rel="stylesheet" href="../../static/styles/search.css">
+    <link rel="stylesheet" href="../../static/styles/admin_songs.css">
+    <link rel="stylesheet" href="../../static/styles/admin_album.css">
     <link rel="icon" href="../../static/images/KalpRaag Logo Rounded.png">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -41,51 +44,58 @@
             </div>
         </div>
         <div id="links">
-            <a href="../../user/{{user_name}}" class="link">User Mode</a>
-            <a href="/">Logout</a>
+            <a href="/" class="link">User Mode</a>
         </div>
     </nav>
     <hr>
     <section id="main">
         <div id="navigator">
             <div id="library">
-                <a href="../{{user_name}}?creator_id={{creator_id}}" style="color: white;text-decoration: none;"><h1>Dashboard &nbsp;&#11166;</h1></a>
-                <h1>Your Library &nbsp;&#11166;</h1>
-                <div class="linkContainer">
+                <a href="../{{user_name}}" style="color: white;text-decoration: none;"><h1>Dashboard &nbsp;&#11166;</h1></a>
+                <h1>Navigator &nbsp;&#11166;</h1>
+                <a class="linkContainer" href="../{{user_name}}/allSongs">
                     <img src="../../static/images/play.png" alt="" class="navSuper">
-                    <h3 class="links">Uploaded Songs</h3>
-                </div>
-
-                {% for i in song_ids %}
-                    <div class="navImgs indexer songPlayer playlists" style="height: max-content;width: max-content;margin-left:5rem" data-song-id="{{i['song_id']}}" data-user-name="{{user_name}}">&#11166;&ensp;{{i["song_name"][0]|upper}}{{i["song_name"][1:]}}</div>
-                {% endfor %}
-
-                <div class="linkContainer">
+                    <h3 class="links">Songs</h3>
+                </a>
+                <a class="linkContainer" href="../{{user_name}}/allAlbums">
                     <img src="../../static/images/album.png" alt="" class="navSuper">
-                    <h3 class="links">Created Albums</h3>
-                </div>
-                {% for i in album_ids %}
-                    <div class="navImgs indexer albumPlayer playlists" style="height: max-content;width: max-content;margin-left:5rem" data-album-id="{{i['album_id']}}" data-user-name="{{user_name}}">&#11166;&ensp;{{i["album_name"][0]|upper}}{{i["album_name"][1:]}}</div>
-                <script src="../../static/scripts/creator_alternate.js"></script>
-            {% endfor %}
+                    <h3 class="links">Albums</h3>
+                </a>
+                <a class="linkContainer" href="../{{user_name}}/allUsers">
+                    <img src="../../static/images/user.png" alt="" class="navSuper">
+                    <h3 class="links">Users</h3>
+                </a>
+                <a class="linkContainer" href="../{{user_name}}/allCreators">
+                    <img src="../../static/images/creator.png" alt="" class="navSuper">
+                    <h3 class="links">Creators</h3>
+                </a>
             </div>
         </div>
         <div id="musicBody">
-            <form action="./add-album-form" method="POST">
-                <label for="title" class="labeler">Title</label>
-                <input type="text" class="inputer" name="title" placeholder="Enter Album Title">
-                <label for="artist" class="labeler">Artist</label>
-                <input type="text" class="inputer" name="artist" placeholder="Enter Album Artist">
-                <label for="genre" class="labeler">Genre</label>
-                <input type="text" class="inputer" name="genre" placeholder="Enter Album Genre">
-                <label for="songList" class="labeler">Pick songs for this album</label>
-                <select id="songList" name="songList" multiple>
-                    {% for song in song_ids %}
-                        <option value="{{song['song_id']}}">{{song["song_name"][0]|upper}}{{song["song_name"][1:]}}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Create Album" id="submitBtn">
-            </form>
+            <div id="musicContainer">
+                {% for i in userData %}
+                    <div class="albo" >
+                        <div class="albumCont">
+                            <div class="albumimg" style="margin-top: 1rem;">
+                                <img src="../../static/images/user.png" class="albumImgAct" alt="">
+                            </div>
+                            <div class="albumDetails">
+                                <p class="albumName">{{i["user_name"]}}</p>
+                                <p class="albumArtist">Eng. Score: {{i["eng_score"]}}</p>
+                            </div>
+                        </div>
+
+                        <div class="musicDeleter">
+                            <a href="/admin-user-tempBan?user_id={{i['user_id']}}&admin_name={{user_name}}" class="deleteSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color:orange;" title="Ban for 30 Days">
+                                <img src="../../static/images/caution.png" alt="Play" class="musicControl" style="filter:none;height: 70%;">
+                            </a>
+                            <a href="/admin-user-permaBan?user_id={{i['user_id']}}&admin_name={{user_name}}" class="flagSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color: red;" title="Ban Permanently">
+                                <img src="../../static/images/ban.png" alt="Play" class="musicControl" style="height: 70%;">
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </section>
     <section id="musicPlayer">
@@ -125,14 +135,11 @@
             </div>
 
     </section>
-    <!-- <script src="../../static/scripts/index.js"></script> -->
+    <script src="../../static/scripts/liked_songs.js"></script>
+    <script src="../../static/scripts/playlist.js"></script>
+    <script src="../../static/scripts/album.js"></script>
+    <script src="../../static/scripts/admin_album.js"></script>
 
-    <!-- <script src="../../static/scripts/liked_songs.js"></script> -->
-    <!-- <script src="../../static/scripts/playlist.js"></script> -->
-    <!-- <script src="../../static/scripts/album.js"></script> -->
-    <script src="../../static/scripts/creator_dash.js"></script>
-    <script src="../../static/scripts/creator_alternate.js"></script>
-    <script src="../../../../static/scripts/creator_search.js"></script>
     <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
 </body>
 

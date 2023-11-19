@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KalpRaag : A Music Screaming Platform</title>
+    <link rel="stylesheet" href="../static/styles/index.css">
+    <link rel="stylesheet" href="../static/styles/user.css">
+    <link rel="icon" href="../static/images/KalpRaag Logo Rounded.png">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <nav id="navbar">
+        <div id="profile">
+            <img src="../static/images/KalpRaag Logo.png" alt="KalpRaag Logo" id="logo">
+            <p>Kalp Raag</p>
+            <!-- <p>Kalp राग</p> -->
+        </div>
+        <div id="search">
+            <div id="searchBox">
+                <div id="searchIcon" data-user-name="{{user_name}}">
+                    <img src="../../static/images/search.png" alt="Search Btn" id="searchIconImg">
+                </div>
+                <select id="filterList" >
+                    <option value="All">All</option>
+                    <option value="Song">Song</option>
+                    <option value="Album">Album</option>
+                    <option value="Rating">Rating</option>
+                    <option value="Genre">Genre</option>
+                    <option value="Artist">Artist</option>
+                </select>
+                <div id="type">
+                    <input type="text" name="search" id="typeIn" placeholder="What's on your mind today?">
+                </div>
+            </div>
+        </div>
+    </nav>
+    <hr>
+    <section id="main" style="width: 100%;height: 100%;">
+        
+        <div id="musicBody" style="width: 100%;display: flex;flex-direction: column;justify-content: center;align-items: center;">
+            <div id="musicContainer" style="width: 70%;display: flex;flex-direction: column;justify-content: center;align-items: center;flex-wrap: wrap;">
+                <h1 style="text-align: center;color: white;font-size: 2rem;margin-bottom: 7rem;">{{message}}</h1>
+            </div>
+        </div>
+    </section>
+    
+    <script src="../static/scripts/musicBar.js"></script>
+
+    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+</body>
+
+</html>

@@ -6,6 +6,8 @@ import random
 from app.models import db, Songs, Rating
 from faker import Faker
 from datetime import datetime
+import json
+from datetime import datetime, timedelta
 
 USERNAME = ""
 
@@ -50,7 +52,14 @@ def home(user_name):
     albumData = requests.get(albumFetcher).json()
     userFetcher = f"http://127.0.0.1:5000/api/user?user_name={user_name}"
     userData = requests.get(userFetcher).json()
-    creator = 1 if userData["creator_id"] else 0
+
+    creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
+    creatorData = requests.get(creatorFetcher)
+    if creatorData.status_code==200:
+        creator = 1
+    else:
+        creator = 0
+
     return render_template("user.html",allSongs=response,user_name=user_name,playlists=playlistData,albums=albumData,creator=creator,user_data=userData)
 
 @app.route("/update-section")
@@ -133,14 +142,17 @@ def go_back():
 def liked_songs(user_name):
     user_name="%20".join(user_name.split(" "))
     likeFetcher = f"http://127.0.0.1:5000/api/rating?user_name={user_name}"
-    likeData = requests.get(likeFetcher).json()
+    likeData = requests.get(likeFetcher)
+    print(likeData)
     songs = []
-    for i in likeData:
-        if i["love"]==1:
-            song_id = i["song_id"]
-            songFetcher = f"http://127.0.0.1:5000/api/songs?id={song_id}"
-            songData = requests.get(songFetcher).json()
-            songs.append(songData)
+    if likeData.status_code==200:
+        likeData = likeData.json()
+        for i in likeData:
+            if i["love"]==1:
+                song_id = i["song_id"]
+                songFetcher = f"http://127.0.0.1:5000/api/songs?id={song_id}"
+                songData = requests.get(songFetcher).json()
+                songs.append(songData)
     playlistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
     playlistData = requests.get(playlistFetcher).json()
     albumFetcher = f"http://127.0.0.1:5000/api/album?saved_by={user_name}"
@@ -227,6 +239,7 @@ def add_song_to_playlist():
     playlistData = requests.get(playlistFetcher).json()
     url = "http://127.0.0.1:5000/api/playlist"
     song_ids = playlistData["song_ids"]
+    
     if song_ids=="":
         song_ids+=f"{song_id}"
     elif song_id in song_ids:
@@ -456,6 +469,102 @@ def searcher(user_name):
     return render_template("search.html",albums=albumData,playlists=allPlaylistData,user_name=user_name,fetchSearchData=fetchSearchData,fetchAlbumData=fetchAlbumData,creator=creator,user_data=userData)
 
 
+@app.route("/creator/<user_name>/search")
+def creator_searcher(user_name):
+
+    allPlaylistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
+    allPlaylistData = requests.get(allPlaylistFetcher).json()
+    albumFetcher = f"http://127.0.0.1:5000/api/album?saved_by={user_name}"
+    albumData = requests.get(albumFetcher).json()
+
+    key = request.args.get("key")
+    filterVal = request.args.get("filter")
+    print(key,filterVal)
+    fetchSearchData = []
+    fetchAlbumData = []
+    if filterVal=="Song":
+        if key.lower()=="$all":
+            fetchSearch = f"http://127.0.0.1:5000/api/songs"
+            searchData = requests.get(fetchSearch)
+            if searchData.status_code!=400:
+                fetchSearchData=searchData.json()
+        else:
+            fetchSearch = f"http://127.0.0.1:5000/api/songs?key={key}&filter={filterVal}"
+            searchData = requests.get(fetchSearch)
+            if searchData.status_code!=400:
+                fetchSearchData=searchData.json()
+
+    elif filterVal=="Album":
+        if key.lower()=="$all":
+            fetchSearch = f"http://127.0.0.1:5000/api/album"
+            searchData = requests.get(fetchSearch)
+            if searchData.status_code!=400:
+                fetchAlbumData=searchData.json()
+        else:
+            fetchSearch = f"http://127.0.0.1:5000/api/album?key={key}&filter={filterVal}"
+            searchData = requests.get(fetchSearch)
+            if searchData.status_code!=400:
+                fetchAlbumData=searchData.json()
+
+    elif filterVal=="Rating":
+        fetchSearch = f"http://127.0.0.1:5000/api/rating?rating={int(key)}&user_name={user_name}"
+        searchData = requests.get(fetchSearch)
+        songs=searchData.json()
+        # print(songs)
+        if searchData.status_code!=400:
+            for i in songs:
+                songFetcher = f"http://127.0.0.1:5000/api/songs?id={i['song_id']}"
+                songData = requests.get(songFetcher).json()
+                fetchSearchData.append(songData)
+    
+    elif filterVal=="Genre":
+        fetchSearch = f"http://127.0.0.1:5000/api/album?genre={key}"
+        searchData = requests.get(fetchSearch)
+        if searchData.status_code!=400:
+            fetchAlbumData=searchData.json()
+    
+    elif filterVal=="Artist":
+        fetchSearch = f"http://127.0.0.1:5000/api/album?artist_id={key}"
+        searchData = requests.get(fetchSearch)
+        if searchData.status_code!=400:
+            fetchAlbumData=searchData.json()
+    
+    elif filterVal=="All":
+        fetchSearchSong = f"http://127.0.0.1:5000/api/songs?key={key}&filter={filterVal}"
+        searchDataSong = requests.get(fetchSearchSong)
+        if searchDataSong.status_code!=400:
+            fetchSearchData=searchDataSong.json()
+
+        fetchSearchAlbum = f"http://127.0.0.1:5000/api/album?key={key}&filter={filterVal}"
+        searchDataAlbum = requests.get(fetchSearchAlbum)
+        if searchDataAlbum.status_code!=400:
+            fetchAlbumData=searchDataAlbum.json()
+
+        if key in [str(j) for j in range(0,6)]:
+            fetchSearchRating = f"http://127.0.0.1:5000/api/rating?rating={int(key)}&user_name={user_name}"
+            searchDataRating  = requests.get(fetchSearchRating)
+            songs=searchDataRating.json()
+            if searchDataRating.status_code!=400:
+                for i in songs:
+                    songFetcher = f"http://127.0.0.1:5000/api/songs?id={i['song_id']}"
+                    songData = requests.get(songFetcher).json()
+                    fetchSearchData.append(songData)
+        
+        fetchSearchGenre = f"http://127.0.0.1:5000/api/album?genre={key}"
+        searchDataGenre = requests.get(fetchSearchGenre)
+        if searchDataGenre.status_code!=400:
+            fetchAlbumData=searchDataGenre.json()
+
+        fetchSearchArtist = f"http://127.0.0.1:5000/api/album?artist_id={key}"
+        searchDataArtist = requests.get(fetchSearchArtist)
+        if searchDataArtist.status_code!=400:
+            fetchAlbumData=searchDataArtist.json()
+    userFetcher = f"http://127.0.0.1:5000/api/user?user_name={user_name}"
+    userData = requests.get(userFetcher).json()
+    creator = 1 if userData["creator_id"] else 0
+    return render_template("search.html",albums=albumData,playlists=allPlaylistData,user_name=user_name,fetchSearchData=fetchSearchData,fetchAlbumData=fetchAlbumData,creator=creator,user_data=userData)
+
+
 # Creator
 
 @app.route("/creator-register")
@@ -493,13 +602,24 @@ def creator_dash(user_name):
     userData = requests.get(userFetcher).json()
     creator = 1 if userData["creator_id"] else 0
 
+    with open("app/static/jsons/userActions.json", 'r') as file:
+        jsonData = json.load(file)
+    if f"{userData['user_id']}" in jsonData:
+        usx = jsonData[f"{userData['user_id']}"]
+        if usx["ban_type"]=="temp ban" and usx["end_date"]!=f"{datetime.now().date()}":
+            messenger = f"You have been temporarily banned for a period of 30 days. You can access your account on {usx['end_date']}"
+            return render_template("creator_ban.html",message=messenger,user_data=userData)
+        elif usx["ban_type"]=="temp ban" and usx["end_date"]==f"{datetime.now().date()}":
+            del jsonData[f"{userData['user_id']}"]
+        elif usx["ban_type"]=="perma ban":
+            messenger = f"You have been permanently banned from Kalp Raag because of your misconduct. Hope you improve!!"
+            return render_template("creator_ban.html",message=messenger,user_data=userData)
     creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
     creatorData = requests.get(creatorFetcher).json()
-    song_ids = creatorData["song_ids"].split(",")
-    album_ids = creatorData["album_ids"].split(",")
-
-    song_count=len(song_ids) if song_ids[0]!="" else 0
-    album_count=len(album_ids) if song_ids[0]!="" else 0
+    song_ids = creatorData["song_ids"].split(",") if creatorData["song_ids"].split(",")[0]!="" else []
+    album_ids = creatorData["album_ids"].split(",") if creatorData["album_ids"].split(",")[0]!="" else []
+    song_count=len(song_ids)
+    album_count=len(album_ids)
     total_likes=0
     avg_rating=0
     avg_album=0
@@ -509,7 +629,7 @@ def creator_dash(user_name):
     count_album_saves=0
 
     for i in song_ids:
-        songFetcher = f"http://127.0.0.1:5000/api/rating?song_id={int(i)}"
+        songFetcher = f"http://127.0.0.1:5000/api/rating?song_id={i}"
         songData = requests.get(songFetcher)
         if songData.status_code==200:
             songData = songData.json()
@@ -521,10 +641,14 @@ def creator_dash(user_name):
                     count_rating+=1
 
     for i in album_ids:
-        albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={int(i)}"
-        albumData = requests.get(albumFetcher).json()
-        total_album_saves+=len(albumData["saved_by"].split(","))
-        count_album_saves+=1
+        print(album_ids,i)
+        albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={i}"
+        albumData = requests.get(albumFetcher)
+        print(albumData)
+        if albumData.status_code==200:
+            albumData = albumData.json()
+            total_album_saves+=len(albumData["saved_by"].split(",")) if albumData["saved_by"]!="" else 0
+            count_album_saves+=len(albumData["saved_by"].split(",")) if albumData["saved_by"]!="" else 0
     
     avg_rating = round(total_rating/count_rating,2) if count_rating!=0 else 0
     avg_album = round(total_album_saves/count_album_saves,2) if count_album_saves!=0 else 0
@@ -550,28 +674,29 @@ def creator_dash(user_name):
         if albumData.status_code==200:
             album_retter.append(albumData.json())
     window = request.args.get("window") if request.args.get("window")!=None else "songs"
+
     return render_template("creator_dash.html",user_name=user_name,creator=creator,user_data=userData,stats=stats,song_ids=song_retter,album_ids=album_retter,creator_id=creatorData["creator_id"],window=window)
 
 @app.route("/creator/<user_name>/add-song")
 def add_song(user_name):
     creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
     creatorData = requests.get(creatorFetcher).json()
-    song_ids = creatorData["song_ids"].split(",")
-    album_ids = creatorData["album_ids"].split(",")
+    song_ids = creatorData["song_ids"].split(",") if creatorData["song_ids"].split(",")[0]!="" else []
+    album_ids = creatorData["album_ids"].split(",") if creatorData["album_ids"].split(",")[0]!="" else []
     song_retter = []
     album_retter = []
     for i in song_ids:
-        songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
+        songFetcher = f"http://127.0.0.1:5000/api/songs?id={i}"
         songData = requests.get(songFetcher)
         if songData.status_code==200:
             song_retter.append(songData.json())
 
     for i in album_ids:
-        albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={int(i)}"
+        albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={i}"
         albumData = requests.get(albumFetcher)
         if albumData.status_code==200:
             album_retter.append(albumData.json())
-    return render_template("add_songs.html",user_name=user_name,song_ids=song_retter,album_ids=album_retter)
+    return render_template("add_songs.html",user_name=user_name,song_ids=song_retter,album_ids=album_retter,creator_id=creatorData["creator_id"])
 
 @app.route("/<user_name>/add-song-form",methods=["GET","POST"])
 def add_song_form(user_name):
@@ -630,9 +755,9 @@ def add_song_form(user_name):
                 return {"message":"may day"}
 
 
-        song_ids = creatorData["song_ids"].split(",")
+        song_ids = creatorData["song_ids"].split(",") if creatorData["song_ids"].split(",")[0]!="" else []
         song_ids.append(str(songFetchData.json()["song_id"]))
-        # print(song_ids)
+        print(song_ids)
         entry={
             "user_name":user_name,
             "song_ids":",".join(song_ids),
@@ -660,8 +785,8 @@ def edit_song(user_name):
 
     creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
     creatorData = requests.get(creatorFetcher).json()
-    song_ids = creatorData["song_ids"].split(",")
-    album_ids = creatorData["album_ids"].split(",")
+    song_ids = creatorData["song_ids"].split(",") if creatorData["song_ids"].split(",")[0]!="" else []
+    album_ids = creatorData["album_ids"].split(",") if creatorData["album_ids"].split(",")[0]!="" else []
     song_retter = []
     album_retter = []
     for i in song_ids:
@@ -675,7 +800,7 @@ def edit_song(user_name):
         albumData = requests.get(albumFetcher)
         if albumData.status_code==200:
             album_retter.append(albumData.json())
-    return render_template("edit_songs.html",user_name=user_name,song_ids=song_retter,album_ids=album_retter,songData=songDataFetcher,artist_name=artistData["artist_name"],lyrics=lyrics)
+    return render_template("edit_songs.html",user_name=user_name,song_ids=song_retter,album_ids=album_retter,songData=songDataFetcher,artist_name=artistData["artist_name"],lyrics=lyrics,creator_id=creatorData["creator_id"])
 
 @app.route("/<user_name>/edit-song-form",methods=["GET","POST"])
 def edit_song_form(user_name):
@@ -751,7 +876,7 @@ def delete_song(user_name):
 
     creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
     creatorData = requests.get(creatorFetcher).json()
-    song_ids = creatorData["song_ids"].split(",")
+    song_ids = creatorData["song_ids"].split(",") if creatorData["song_ids"].split(",")[0]!="" else []
     song_ids.remove(song_id)
     creatorPut = f"http://127.0.0.1:5000/api/creator"
     creatorEntry = {
@@ -768,8 +893,8 @@ def delete_song(user_name):
 def add_album(user_name):
     creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
     creatorData = requests.get(creatorFetcher).json()
-    song_ids = creatorData["song_ids"].split(",")
-    album_ids = creatorData["album_ids"].split(",")
+    song_ids = creatorData["song_ids"].split(",") if creatorData["song_ids"].split(",")[0]!="" else []
+    album_ids = creatorData["album_ids"].split(",") if creatorData["album_ids"].split(",")[0]!="" else []
     song_retter = []
     album_retter = []
     for i in song_ids:
@@ -783,7 +908,7 @@ def add_album(user_name):
         albumData = requests.get(albumFetcher)
         if albumData.status_code==200:
             album_retter.append(albumData.json())
-    return render_template("add_album.html",user_name=user_name,song_ids=song_retter,album_ids=album_retter)
+    return render_template("add_album.html",user_name=user_name,song_ids=song_retter,album_ids=album_retter,creator_id=creatorData["creator_id"])
 
 @app.route("/creator/<user_name>/add-album-form",methods=["GET","POST"])
 def add_album_form(user_name):
@@ -826,7 +951,7 @@ def add_album_form(user_name):
     if albumRespo.status_code==200:
         albumFetcher = f"http://127.0.0.1:5000/api/album?album_name={title}"
         albumData = requests.get(albumFetcher).json()
-        album_ids = creatorData["album_ids"].split(",")
+        album_ids = creatorData["album_ids"].split(",") if creatorData["album_ids"].split(",")[0]!="" else []
         album_ids.append(str(albumData["album_id"]))
         print(album_ids)
         creatorPut = f"http://127.0.0.1:5000/api/creator"
@@ -874,7 +999,7 @@ def edit_album(user_name):
         albumData = requests.get(albumFetcher)
         if albumData.status_code==200:
             album_retter.append(albumData.json())
-    return render_template("edit_album.html",albumData=albumFetchedData,user_name=user_name,song_ids=song_retter,album_ids=album_retter,songList=songList,artist_name=artist)
+    return render_template("edit_album.html",albumData=albumFetchedData,user_name=user_name,song_ids=song_retter,album_ids=album_retter,songList=songList,artist_name=artist,creator_id=creatorData["creator_id"])
 
 @app.route("/edit-album-form",methods=["POST","GET"])
 def edit_album_form():
@@ -940,6 +1065,198 @@ def delete_album(user_name):
         return {"message":"may day!!"}
     return redirect(f"/creator/{user_name}?creator_id={creatorData['creator_id']}&window=album")
 
+@app.route("/admin-signin")
+def admin_signin():
+    return render_template("admin_signin.html")
+
+@app.route("/admin-signin-form",methods=["GET","POST"])
+def admin_signin_form():
+    data = request.form
+    adminFetcher = f"http://127.0.0.1:5000/api/admin?user_name={data['name']}&password={data['password']}"
+    adminData = requests.get(adminFetcher)
+    if adminData.status_code==400:
+        return render_template("admin_signin.html",message="Credentials wrong. You are not authorised.")
+
+    return redirect(f"/admin/{data['name']}")
+
+@app.route("/admin/<user_name>")
+def admin_dash(user_name):
+    usersFetcher = f"http://127.0.0.1:5000/api/user"
+    usersData = requests.get(usersFetcher).json()
+    
+    creatorsFetcher = f"http://127.0.0.1:5000/api/creator"
+    creatorsData = requests.get(creatorsFetcher).json()
+    
+    songsFetcher = f"http://127.0.0.1:5000/api/songs"
+    songsData = requests.get(songsFetcher).json()
+    
+    albumsFetcher = f"http://127.0.0.1:5000/api/album"
+    albumsData = requests.get(albumsFetcher).json()
+    
+    ratingFetcher = f"http://127.0.0.1:5000/api/rating"
+    ratingData = requests.get(ratingFetcher).json()
+    
+    avg_rating = 0
+    total_rating = 0
+    total_saves = 0
+    avg_saves = 0
+    total_likes = 0
+    popular_song = {}
+    no_genre = []
+    for i in ratingData:
+        total_rating+=i['rating']
+        total_likes+=i["love"]
+        if i["song_id"] not in popular_song:
+            popular_song[i["song_id"]] = i["love"]
+        else:
+            popular_song[i["song_id"]]+=i["love"]
+    avg_rating = round(total_rating/len(ratingData),2)
+    pop_song = max(popular_song, key=lambda k: popular_song[k])
+    songFetcher = f"http://127.0.0.1:5000/api/songs?id={pop_song}"
+    songData = requests.get(songFetcher).json()
+
+    for i in albumsData:
+        total_saves+=len(i['saved_by'].split(","))
+        if i["genre"] not in no_genre:
+            no_genre.append(i["genre"])
+    avg_saves = round(total_saves/len(albumsData),2)
+    no_genre = len(list(set(no_genre)))
+
+    stats={
+        "total_users":len(usersData),
+        "total_creators":len(creatorsData),
+        "total_songs":len(songsData),
+        "total_albums":len(albumsData),
+        "avg_rating":avg_rating,
+        "avg_saves":avg_saves,
+        "total_likes":total_likes,
+        "most_popular_song":songData["song_name"],
+        "no_genre":no_genre,
+    }
+    return render_template("admin_dash.html",stats=stats,user_name=user_name)
+
+@app.route("/admin/<user_name>/allSongs")
+def admin_songs(user_name):
+    songFetcher = f"http://127.0.0.1:5000/api/songs"
+    songData = requests.get(songFetcher).json()
+    return render_template("admin_songs.html",allSongs=songData,user_name=user_name)
+
+@app.route("/admin-song-delete")
+def admin_song_delete():
+    song_id = request.args.get("song_id")
+    user_name = request.args.get("user_name")
+    songUrl = f"http://127.0.0.1:5000/api/songs?id={song_id}"
+    songDeleter = requests.delete(songUrl)
+    return redirect(f"/admin/{user_name}/allSongs")
+
+@app.route("/admin-song-flag")
+def admin_song_flag():
+    song_id = request.args.get("song_id")
+    user_name = request.args.get("user_name")
+    return redirect(f"/admin/{user_name}/allSongs")
+
+@app.route("/admin/<user_name>/allAlbums")
+def admin_album(user_name):
+    albumFetcher = f"http://127.0.0.1:5000/api/album"
+    albumData = requests.get(albumFetcher).json()
+    return render_template("admin_album.html",albumData=albumData,user_name=user_name)
+
+@app.route("/admin/<user_name>/albums")
+def admin_album_search(user_name):
+    album_id = request.args.get("album_id")
+    albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={album_id}"
+    albumData = requests.get(albumFetcher).json()
+    allSongs = []
+    for i in albumData["song_ids"].split(","):
+        songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
+        songData = requests.get(songFetcher)
+        if songData.status_code==200:
+            allSongs.append(songData.json())
+    return render_template("admin_album_search.html",albumData=albumData,user_name=user_name,allSongs=allSongs)
+
+@app.route("/admin-album-delete")
+def admin_album_delete():
+    album_id = request.args.get("album_id")
+    user_name = request.args.get("user_name")
+    albumUrl = f"http://127.0.0.1:5000/api/album?album_id={album_id}"
+    albumDeleter = requests.delete(albumUrl)
+    if albumDeleter.status_code==400:
+        return {"message":"may day !!"}
+    return redirect(f"/admin/{user_name}/allAlbums")
+
+@app.route("/admin-album-flag")
+def admin_album_flag():
+    song_id = request.args.get("song_id")
+    user_name = request.args.get("user_name")
+    return redirect(f"/admin/{user_name}/allAlbums")
+
+@app.route("/admin/<user_name>/allUsers")
+def admin_user(user_name):
+    userFetcher = f"http://127.0.0.1:5000/api/user"
+    userData = requests.get(userFetcher).json()
+    for i in userData:
+        ratingFetcher = f"http://127.0.0.1:5000/api/rating?user_name={i['user_name']}"
+        ratingData = requests.get(ratingFetcher)
+        if ratingData.status_code==200:
+            love=0
+            ratings=0
+            for j in ratingData.json():
+                love+=j["love"]
+                ratings+=1
+            engScore = 20*love + 80*ratings
+        else:
+            engScore = 0
+        i["eng_score"] = engScore
+    userData = sorted(userData, key=lambda x: x['eng_score'])[::-1]
+    return render_template("admin_user.html",userData=userData,user_name=user_name)
+
+@app.route("/admin/<user_name>/allCreators")
+def admin_creators(user_name):
+    creatorFetcher = f"http://127.0.0.1:5000/api/creator"
+    creatorData = requests.get(creatorFetcher).json()
+    for i in creatorData:
+        i["song_count"] = len(i["song_ids"].split(",")) if i["song_ids"].split(",")[0] != "" else 0
+        i["album_count"] = len(i["album_ids"].split(",")) if i["album_ids"].split(",")[0] != "" else 0
+    creatorData = sorted(creatorData, key=lambda x: x['song_count'])[::-1]
+    return render_template("admin_creator.html",creatorData=creatorData,user_name=user_name)
+
+@app.route("/admin-user-tempBan")
+def admin_user_tempBan():
+    user_id = request.args.get("user_id")
+    admin_name = request.args.get("admin_name")
+    with open("app/static/jsons/userActions.json", 'r') as file:
+        data = json.load(file)
+    current_date_time = datetime.now()
+    current_date = current_date_time.date()
+    end_date = current_date + timedelta(days=30)
+    print(current_date)
+    data[f"{user_id}"] = {
+        "ban_type" : "temp ban",
+        "start_date" : f"{current_date}",
+        "end_date" : f"{end_date}",
+        "admin_name" : admin_name
+    }
+    print(data)
+    with open("app/static/jsons/userActions.json", 'w') as file:
+        json.dump(data, file, indent=2)
+    return redirect(f"/admin/{admin_name}/allUsers")
+
+@app.route("/admin-user-permaBan")
+def admin_user_permaBan():
+    user_id = request.args.get("user_id")
+    admin_name = request.args.get("admin_name")
+    with open("app/static/jsons/userActions.json", 'r') as file:
+        data = json.load(file)
+    current_date_time = datetime.now()
+    current_date = current_date_time.date()
+    data[f"{user_id}"] = {
+        "ban_type" : "perma ban",
+        "ban_date" : f"{current_date}",
+        "admin_name" : admin_name
+    }
+    with open("app/static/jsons/userActions.json", 'w') as file:
+        json.dump(data, file, indent=2)
+    return redirect(f"/admin/{admin_name}/allUsers")
 
 
 @app.route("/songpopulator")

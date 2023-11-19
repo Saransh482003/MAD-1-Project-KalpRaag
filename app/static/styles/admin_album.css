@@ -1,0 +1,32 @@
+.albumCont{
+    margin: 0rem;
+    height: 90%;
+    width: 100%;
+    margin: 0rem;
+
+}
+.albumCont::before{
+    border-bottom-left-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+}
+.albumimg{
+    height: 58%;
+}
+.albumDetails{
+    height: 30%;
+}
+.musicDeleter{
+    height: 12%;
+    margin: 0rem;
+}
+.albo{
+    display: flex;
+    flex-direction: column;
+    width: 12rem;
+    height: 14rem;
+    margin: 1rem;
+}
+#musicContainer{
+    flex-direction: row;
+    flex-wrap: wrap;
+}

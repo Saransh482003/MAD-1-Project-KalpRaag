@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KalpRaag : A Music Screaming Platform</title>
+    <link rel="stylesheet" href="../../static/styles/index.css">
+    <link rel="stylesheet" href="../../static/styles/user.css">
+    <link rel="stylesheet" href="../../static/styles/playlist.css">
+    <link rel="stylesheet" href="../../static/styles/album.css">
+    <link rel="stylesheet" href="../../static/styles/creator_dash.css">
+    <link rel="stylesheet" href="../../static/styles/admin_dash.css">
+    <link rel="icon" href="../../static/images/KalpRaag Logo Rounded.png">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <nav id="navbar">
+        <div id="profile">
+            <img src="../../static/images/KalpRaag Logo.png" alt="KalpRaag Logo" id="logo">
+            <p>Kalp Raag</p>
+            <!-- <p>Kalp राग</p> -->
+        </div>
+        <div id="search">
+            <div id="searchBox">
+                <div id="searchIcon" data-user-name="{{user_name}}">
+                    <img src="../../static/images/search.png" alt="Search Btn" id="searchIconImg">
+                </div>
+                <select id="filterList" >
+                    <option value="All">All</option>
+                    <option value="Song">Song</option>
+                    <option value="Album">Album</option>
+                    <option value="Rating">Rating</option>
+                    <option value="Genre">Genre</option>
+                    <option value="Artist">Artist</option>
+                </select>
+                <div id="type">
+                    <input type="text" name="search" id="typeIn" placeholder="What's on your mind today?">
+                </div>
+            </div>
+        </div>
+        <div id="links">
+            <a href="/" class="link">User Mode</a>
+            <a href="/">Logout</a>
+        </div>
+    </nav>
+    <hr>
+    <section id="main">
+        <div id="navigator">
+            <div id="library">
+                <a href="./{{user_name}}" style="color: white;text-decoration: none;"><h1>Dashboard &nbsp;&#11166;</h1></a>
+                <h1>Navigator &nbsp;&#11166;</h1>
+                <a class="linkContainer" href="./{{user_name}}/allSongs">
+                    <img src="../../static/images/play.png" alt="" class="navSuper">
+                    <h3 class="links">Songs</h3>
+                </a>
+                <a class="linkContainer" href="./{{user_name}}/allAlbums">
+                    <img src="../../static/images/album.png" alt="" class="navSuper">
+                    <h3 class="links">Albums</h3>
+                </a>
+                <a class="linkContainer" href="./{{user_name}}/allUsers">
+                    <img src="../../static/images/user.png" alt="" class="navSuper">
+                    <h3 class="links">Users</h3>
+                </a>
+                <a class="linkContainer" href="./{{user_name}}/allCreators">
+                    <img src="../../static/images/creator.png" alt="" class="navSuper">
+                    <h3 class="links">Creators</h3>
+                </a>
+            </div>
+        </div>
+        <div id="musicBody">
+            <!-- {% set playlistName = playlistName|replace('%20',' ') %} -->
+            <div id="playlistDetails">
+                <h1 id="playlistName">
+                    <img src="../../static/images/Dashboard.png" alt="" id="playlistIcon">
+                    Dashboard
+                </h1>
+            </div>
+            <div id="dashboard">
+                <div class="secDash">
+                    <a href="./{{user_name}}/allUsers" class="card clickable" style="width: 30rem;">
+                        <h1 class="cardHeader">Total Users</h1>
+                        <div class="cardInfo">{{stats["total_users"]}}</div>
+                    </a>
+                    <div class="card">
+                        <h1 class="cardHeader">Average Songs Rating</h1>
+                        <div class="cardInfo">{{stats["avg_rating"]}}</div>
+                    </div>
+                    <div class="card">
+                        <h1 class="cardHeader">Average Album Saves</h1>
+                        <div class="cardInfo">{{stats["avg_saves"]}}</div>
+                    </div>
+                </div>
+                <div class="secDash">
+                    <a href="./{{user_name}}/allCreators" class="card clickable" style="width: 30rem;">
+                        <h1 class="cardHeader">Total Creators</h1>
+                        <div class="cardInfo">{{stats["total_creators"]}}</div>
+                    </a>
+                    <a href="./{{user_name}}/allSongs" class="card clickable">
+                        <h1 class="cardHeader">Total Songs Uploaded</h1>
+                        <div class="cardInfo">{{stats["total_songs"]}}</div>
+                    </a>
+                    <a href="./{{user_name}}/allAlbums" class="card clickable">
+                        <h1 class="cardHeader">Total Albums Uploaded</h1>
+                        <div class="cardInfo">{{stats["total_albums"]}}</div>
+                    </a>
+                </div>
+                <div class="secDash" style="margin-bottom: 8rem;">
+                    <div class="card" style="width: 30rem;">
+                        <h1 class="cardHeader">Most Popular Song</h1>
+                        <div class="cardInfo" style="font-size: 3rem;">{{stats["most_popular_song"][0]|upper}}{{stats["most_popular_song"][1:10]}}</div>
+                    </div>
+                    <div class="card">
+                        <h1 class="cardHeader">Total Song Likes</h1>
+                        <div class="cardInfo">{{stats["total_likes"]}}</div>
+                    </div>
+                    <div class="card">
+                        <h1 class="cardHeader">No of Genre</h1>
+                        <div class="cardInfo">{{stats["no_genre"]}}</div>
+                    </div>
+                </div>
+                <!-- <div class="card">
+                    <h1 class="cardHeader">Total Songs Uploaded</h1>
+                    <div class="cardInfo"></div>
+                </div>
+                <div class="card">
+                    <h1 class="cardHeader">Total Albums Uploaded</h1>
+                    <div class="cardInfo"></div>
+                </div>
+                <div class="card">
+                    <h1 class="cardHeader">Total Likes</h1>
+                    <div class="cardInfo"></div>
+                </div>
+                <div class="card">
+                    <h1 class="cardHeader">Average Songs Rating</h1>
+                    <div class="cardInfo"></div>
+                </div>
+                <div class="card">
+                    <h1 class="cardHeader">Average Album Saves</h1>
+                    <div class="cardInfo"></div>
+                </div> -->
+            </div>
+
+            
+        </div>
+    </section>
+    <!-- <script src="../../static/scripts/index.js"></script> -->
+
+    <!-- <script src="../../static/scripts/liked_songs.js"></script> -->
+    <!-- <script src="../../static/scripts/playlist.js"></script> -->
+    <!-- <script src="../../static/scripts/album.js"></script> -->
+    <script src="../../static/scripts/creator_dash.js"></script>
+    <script src="../../static/scripts/creator_alternate.js"></script>
+
+    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+</body>
+
+</html>

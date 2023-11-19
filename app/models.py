@@ -60,3 +60,10 @@ class Creator(db.Model):
     user_name = db.Column(db.Integer, unique=True,nullable=False)
     song_ids = db.Column(db.String, nullable=False)
     album_ids = db.Column(db.String, nullable=False) 
+
+class Admin(db.Model):
+    admin_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    user_name = db.Column(db.String, unique=True,nullable=False)
+    password = db.Column(db.String,nullable=False)
+    blacklist = db.Column(db.String,nullable=False)
+    whitelist = db.Column(db.String,nullable=False)

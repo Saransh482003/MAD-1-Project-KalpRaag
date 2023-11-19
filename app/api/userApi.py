@@ -50,20 +50,6 @@ class userTransaction(Resource):
         if data:
             return data, 200
         abort(400, message= "Users does not exist")
-
-    # @marshal_with(returner)
-    # def get(self,user_id):
-    #     data = Users.query.filter_by(user_id=user_id).first()
-    #     if data:
-    #         return data, 200
-    #     abort(400,message="User do not exist")
-
-    # @marshal_with(returner)
-    # def get(self,user_name,user_password):
-    #     data = Users.query.filter_by(user_name=user_name,user_password=user_password).first()
-    #     if data:
-    #         return data, 200
-    #     abort(400,message="User do not exist")
     
     @marshal_with(returner)
     def post(self):
@@ -93,5 +79,15 @@ class userTransaction(Resource):
         #     fetcher.playlists = req["playlists"]
         db.session.commit()
         return fetcher, 200
+    
+    def delete(self):
+        user_id = request.args.get("user_id")
+        fetcher = Users.query.filter_by(user_id=user_id).first()
+        if fetcher:
+            db.session.delete(fetcher)
+            db.session.commit()
+            return {f"User Name : {fetcher['user_name']} deleted"}, 200
+        abort(400, message= "User do not exits")
+
     
 api_u.add_resource(userTransaction,"/<int:user_id>","/","/<user_name>/<user_password>")

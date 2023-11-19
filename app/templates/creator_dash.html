@@ -45,9 +45,10 @@
         </div>
     </nav>
     <hr>
-    <section id="main">
-        <div id="navigator">
+    <section id="main" style="height: 100%;margin-bottom: 3rem;">
+        <div id="navigator" style="height: 100%;">
             <div id="library">
+                <a href="./{{user_name}}?creator_id={{creator_id}}" style="color: white;text-decoration: none;"><h1>Dashboard &nbsp;&#11166;</h1></a>
                 <h1>Your Library &nbsp;&#11166;</h1>
                 <div class="linkContainer">
                     <img src="../../static/images/play.png" alt="" class="navSuper">
@@ -68,7 +69,7 @@
             {% endfor %}
             </div>
         </div>
-        <div id="musicBody">
+        <div id="musicBody" style="height: 100%">
             <!-- {% set playlistName = playlistName|replace('%20',' ') %} -->
             <div id="playlistDetails">
                 <h1 id="playlistName">
@@ -109,7 +110,7 @@
                 {% endif %}
 
             </div>
-            <div id="contentDroper">
+            <div id="contentDroper" style="margin-bottom: 10rem;">
                 {% if window=="songs" %}
                     <a href="./{{user_name}}/add-song" id="songer">
                         + Add Song
@@ -148,7 +149,7 @@
             </div>
         </div>
     </section>
-    <section id="musicPlayer">
+    <!-- <section id="musicPlayer">
         <div id="musicDetails">
             <div id="musicImgBottom">
             </div>
@@ -183,7 +184,7 @@
                 </div>
             </div>
 
-    </section>
+    </section> -->
     <!-- <script src="../../static/scripts/index.js"></script> -->
 
     <!-- <script src="../../static/scripts/liked_songs.js"></script> -->
@@ -191,6 +192,17 @@
     <!-- <script src="../../static/scripts/album.js"></script> -->
     <script src="../../static/scripts/creator_dash.js"></script>
     <script src="../../static/scripts/creator_alternate.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        let search = document.getElementById("searchIcon")
+        search.addEventListener("click", () => {
+            let key = document.getElementById("typeIn").value
+            let searchType = document.getElementById("filterList").value
+
+            window.location.href = `/${search.getAttribute("data-user-name")}/search?filter=${searchType}&key=${key}`
+        })
+    })
+    </script>
 
     <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
 </body>
