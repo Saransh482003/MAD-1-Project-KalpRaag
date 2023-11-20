@@ -86,12 +86,31 @@
                         </div>
 
                         <div class="musicDeleter">
-                            <a href="/admin-user-tempBan?user_id={{i['user_id']}}&admin_name={{user_name}}" class="deleteSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color:orange;" title="Ban for 30 Days">
-                                <img src="../../static/images/caution.png" alt="Play" class="musicControl" style="filter:none;height: 70%;">
-                            </a>
-                            <a href="/admin-user-permaBan?user_id={{i['user_id']}}&admin_name={{user_name}}" class="flagSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color: red;" title="Ban Permanently">
-                                <img src="../../static/images/ban.png" alt="Play" class="musicControl" style="height: 70%;">
-                            </a>
+                            {% if banData[i["user_id"]|string] %}
+                                {% if banData[i["user_id"]|string]["ban_type"]=="temp ban" %}
+                                    <a href="/admin-user-tempBan-remove?user_id={{i['user_id']}}&admin_name={{user_name}}" class="deleteSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color:rgb(0, 115, 255);" title="Revoke 30 Days Ban">
+                                        <img src="../../static/images/caution.png" alt="Play" class="musicControl" style="filter:none;height: 70%;">
+                                    </a>
+                                    <a href="/admin-user-permaBan?user_id={{i['user_id']}}&admin_name={{user_name}}" class="flagSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color: red;" title="Ban Permanently">
+                                        <img src="../../static/images/ban.png" alt="Play" class="musicControl" style="height: 70%;">
+                                    </a>
+                                {% else %}
+                                    <a href="/admin-user-tempBan?user_id={{i['user_id']}}&admin_name={{user_name}}" class="deleteSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color:orange;" title="Ban for 30 Days">
+                                        <img src="../../static/images/caution.png" alt="Play" class="musicControl" style="filter:none;height: 70%;">
+                                    </a>
+                                    <a href="/admin-user-permaBan-remove?user_id={{i['user_id']}}&admin_name={{user_name}}" class="flagSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color: green;" title="Revoke Permanent Ban">
+                                        <img src="../../static/images/ban.png" alt="Play" class="musicControl" style="height: 70%;">
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                
+                                <a href="/admin-user-tempBan?user_id={{i['user_id']}}&admin_name={{user_name}}" class="deleteSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color:orange;" title="Ban for 30 Days">
+                                    <img src="../../static/images/caution.png" alt="Play" class="musicControl" style="filter:none;height: 70%;">
+                                </a>
+                                <a href="/admin-user-permaBan?user_id={{i['user_id']}}&admin_name={{user_name}}" class="flagSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color: red;" title="Ban Permanently">
+                                    <img src="../../static/images/ban.png" alt="Play" class="musicControl" style="height: 70%;">
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}

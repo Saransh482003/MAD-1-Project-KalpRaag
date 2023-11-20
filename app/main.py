@@ -37,8 +37,23 @@ def signin():
         password = form["password"]
         url = f"http://127.0.0.1:5000/api/user?user_name={name}&user_password={password}"
         response = requests.get(url)
+        # print(type(response.json()["user_id"]))
         if response.status_code==200:
-            return redirect(f"/user/{name}")
+            with open("app/static/jsons/userActions.json", 'r') as file:
+                data = json.load(file)
+            if f"{response.json()['user_id']}" in data:
+                reff = data[f"{response.json()['user_id']}"]
+                if reff["ban_type"]=="temp ban":
+                        if reff["end_date"]!=f"{datetime.now().date()}":
+                            return render_template("index.html",message=f"You have been temporarily banned for 30 days. You can access your account on {reff['end_date']}.")
+                        else:
+                            return redirect(f"/user/{name}")
+                else:
+                    return render_template("index.html",message=f"You have been permanently banned from Kalp Raag for your improper behaviour. Hope you improve yourself.")
+
+            else:
+                return redirect(f"/user/{name}")
+
         return render_template("index.html",message="Wrong Credentials. Please try again.")
     
 @app.route("/user/<user_name>")
@@ -602,20 +617,16 @@ def creator_dash(user_name):
     userData = requests.get(userFetcher).json()
     creator = 1 if userData["creator_id"] else 0
 
-    with open("app/static/jsons/userActions.json", 'r') as file:
-        jsonData = json.load(file)
-    if f"{userData['user_id']}" in jsonData:
-        usx = jsonData[f"{userData['user_id']}"]
-        if usx["ban_type"]=="temp ban" and usx["end_date"]!=f"{datetime.now().date()}":
-            messenger = f"You have been temporarily banned for a period of 30 days. You can access your account on {usx['end_date']}"
-            return render_template("creator_ban.html",message=messenger,user_data=userData)
-        elif usx["ban_type"]=="temp ban" and usx["end_date"]==f"{datetime.now().date()}":
-            del jsonData[f"{userData['user_id']}"]
-        elif usx["ban_type"]=="perma ban":
-            messenger = f"You have been permanently banned from Kalp Raag because of your misconduct. Hope you improve!!"
-            return render_template("creator_ban.html",message=messenger,user_data=userData)
+
     creatorFetcher = f"http://127.0.0.1:5000/api/creator?user_name={user_name}"
     creatorData = requests.get(creatorFetcher).json()
+    with open("app/static/jsons/creatorActions.json", 'r') as file:
+        jsonData = json.load(file)
+    if f"{creatorData['creator_id']}" in jsonData:
+        usx = jsonData[f"{creatorData['creator_id']}"]
+        if usx["list_type"]=="black":
+            messenger = f"You have been blacklisted. You can no longer upload songs or create albums. All creator powers have been revoked."
+            return render_template("creator_ban.html",message=messenger,user_data=userData)
     song_ids = creatorData["song_ids"].split(",") if creatorData["song_ids"].split(",")[0]!="" else []
     album_ids = creatorData["album_ids"].split(",") if creatorData["album_ids"].split(",")[0]!="" else []
     song_count=len(song_ids)
@@ -1208,7 +1219,9 @@ def admin_user(user_name):
             engScore = 0
         i["eng_score"] = engScore
     userData = sorted(userData, key=lambda x: x['eng_score'])[::-1]
-    return render_template("admin_user.html",userData=userData,user_name=user_name)
+    with open("app/static/jsons/userActions.json", 'r') as file:
+        jsonData = json.load(file)
+    return render_template("admin_user.html",userData=userData,user_name=user_name,banData=jsonData)
 
 @app.route("/admin/<user_name>/allCreators")
 def admin_creators(user_name):
@@ -1218,12 +1231,16 @@ def admin_creators(user_name):
         i["song_count"] = len(i["song_ids"].split(",")) if i["song_ids"].split(",")[0] != "" else 0
         i["album_count"] = len(i["album_ids"].split(",")) if i["album_ids"].split(",")[0] != "" else 0
     creatorData = sorted(creatorData, key=lambda x: x['song_count'])[::-1]
-    return render_template("admin_creator.html",creatorData=creatorData,user_name=user_name)
+    with open("app/static/jsons/creatorActions.json", 'r') as file:
+        jsonData = json.load(file)
+    return render_template("admin_creator.html",creatorData=creatorData,user_name=user_name,listData=jsonData)
 
 @app.route("/admin-user-tempBan")
 def admin_user_tempBan():
     user_id = request.args.get("user_id")
     admin_name = request.args.get("admin_name")
+    userFetcher = f"http://127.0.0.1:5000/api/user?user_id={user_id}"
+    userData = requests.get(userFetcher).json()
     with open("app/static/jsons/userActions.json", 'r') as file:
         data = json.load(file)
     current_date_time = datetime.now()
@@ -1232,6 +1249,7 @@ def admin_user_tempBan():
     print(current_date)
     data[f"{user_id}"] = {
         "ban_type" : "temp ban",
+        "user_name" : userData["user_name"],
         "start_date" : f"{current_date}",
         "end_date" : f"{end_date}",
         "admin_name" : admin_name
@@ -1241,22 +1259,111 @@ def admin_user_tempBan():
         json.dump(data, file, indent=2)
     return redirect(f"/admin/{admin_name}/allUsers")
 
+@app.route("/admin-user-tempBan-remove")
+def admin_user_tempBan_remove():
+    user_id = request.args.get("user_id")
+    admin_name = request.args.get("admin_name")
+    with open("app/static/jsons/userActions.json", 'r') as file:
+        data = json.load(file)
+    del data[f"{user_id}"]
+
+    with open("app/static/jsons/userActions.json", 'w') as file:
+        json.dump(data, file, indent=2)
+    return redirect(f"/admin/{admin_name}/allUsers")
+
 @app.route("/admin-user-permaBan")
 def admin_user_permaBan():
     user_id = request.args.get("user_id")
     admin_name = request.args.get("admin_name")
+    userFetcher = f"http://127.0.0.1:5000/api/user?user_id={user_id}"
+    userData = requests.get(userFetcher).json()
     with open("app/static/jsons/userActions.json", 'r') as file:
         data = json.load(file)
     current_date_time = datetime.now()
     current_date = current_date_time.date()
     data[f"{user_id}"] = {
         "ban_type" : "perma ban",
+        "user_name" : userData["user_name"],
         "ban_date" : f"{current_date}",
         "admin_name" : admin_name
     }
     with open("app/static/jsons/userActions.json", 'w') as file:
         json.dump(data, file, indent=2)
     return redirect(f"/admin/{admin_name}/allUsers")
+
+@app.route("/admin-user-permaBan-remove")
+def admin_user_permaBan_remove():
+    user_id = request.args.get("user_id")
+    admin_name = request.args.get("admin_name")
+    with open("app/static/jsons/userActions.json", 'r') as file:
+        data = json.load(file)
+    del data[f"{user_id}"]
+    with open("app/static/jsons/userActions.json", 'w') as file:
+        json.dump(data, file, indent=2)
+    return redirect(f"/admin/{admin_name}/allUsers")
+
+
+@app.route("/admin-creator-whitelist")
+def admin_creator_whitelist():
+    creator_id = request.args.get("creator_id")
+    admin_name = request.args.get("admin_name")
+    creatorFetcher = f"http://127.0.0.1:5000/api/creator?creator_id={creator_id}"
+    creatorData = requests.get(creatorFetcher).json()
+    with open("app/static/jsons/creatorActions.json", 'r') as file:
+        data = json.load(file)
+    # print(current_date)
+    data[f"{creator_id}"] = {
+        "list_type" : "white",
+        "user_name" : creatorData["user_name"],
+        "admin_name" : admin_name
+    }
+    # print(data)
+    with open("app/static/jsons/creatorActions.json", 'w') as file:
+        json.dump(data, file, indent=2)
+    return redirect(f"/admin/{admin_name}/allCreators")
+
+@app.route("/admin-creator-whitelist-remove")
+def admin_creator_whitelist_remove():
+    creator_id = request.args.get("creator_id")
+    admin_name = request.args.get("admin_name")
+    with open("app/static/jsons/creatorActions.json", 'r') as file:
+        data = json.load(file)
+    del data[f"{creator_id}"]
+
+    with open("app/static/jsons/creatorActions.json", 'w') as file:
+        json.dump(data, file, indent=2)
+    return redirect(f"/admin/{admin_name}/allCreators")
+
+@app.route("/admin-creator-blacklist")
+def admin_creator_blacklist():
+    creator_id = request.args.get("creator_id")
+    admin_name = request.args.get("admin_name")
+    creatorFetcher = f"http://127.0.0.1:5000/api/creator?creator_id={creator_id}"
+    creatorData = requests.get(creatorFetcher).json()
+    with open("app/static/jsons/creatorActions.json", 'r') as file:
+        data = json.load(file)
+    # print(current_date)
+    data[f"{creator_id}"] = {
+        "list_type" : "black",
+        "user_name" : creatorData["user_name"],
+        "admin_name" : admin_name
+    }
+    # print(data)
+    with open("app/static/jsons/creatorActions.json", 'w') as file:
+        json.dump(data, file, indent=2)
+    return redirect(f"/admin/{admin_name}/allCreators")
+
+@app.route("/admin-creator-blacklist-remove")
+def admin_user_blacklist_remove():
+    creator_id = request.args.get("creator_id")
+    admin_name = request.args.get("admin_name")
+    with open("app/static/jsons/creatorActions.json", 'r') as file:
+        data = json.load(file)
+    del data[f"{creator_id}"]
+
+    with open("app/static/jsons/creatorActions.json", 'w') as file:
+        json.dump(data, file, indent=2)
+    return redirect(f"/admin/{admin_name}/allCreators")
 
 
 @app.route("/songpopulator")

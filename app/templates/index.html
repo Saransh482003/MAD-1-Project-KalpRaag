@@ -38,7 +38,16 @@
                         <input type="password" name="password" id="password" placeholder="Password">
                         <input type="submit" value="CONTINUE" id="subBtn">
                     </form>
-                    <p id="messenger">{{ message }}</p>
+                    {% if "permanently" in message %}
+                        <p id="messenger" style="text-align: center; color: red;">{{ message }}</p>
+                    {% else %}
+                        {% if "temporarily" in message %}
+                            <p id="messenger" style="text-align: center; color: orange;">{{ message }}</p>
+                        {% else %}
+                            <p id="messenger" style="text-align: center;">{{ message }}</p> 
+                        {% endif %}
+                    {% endif %}
+                    
                 </div>
             </div>
 

@@ -87,12 +87,31 @@
                         </div>
 
                         <div class="musicDeleter">
-                            <a href="/admin-creator-whitelist?creator_id={{i['creator_id']}}" class="deleteSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color:white;" title="Whitelist Creator">
-                                <img src="../../static/images/whitelist.png" alt="Play" class="musicControl" style="filter:none;height: 70%;">
-                            </a>
-                            <a href="/admin-user-blacklist?creator_id={{i['creator_id']}}" class="flagSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color: #3e3e3e;" title="Blacklist Creator">
-                                <img src="../../static/images/blacklist.png" alt="Play" class="musicControl" style="height: 70%;">
-                            </a>
+                            {% if listData[i["creator_id"]|string] %}
+                                {% if listData[i["creator_id"]|string]["list_type"]=="white" %}
+                                    <a href="/admin-creator-whitelist-remove?creator_id={{i['creator_id']}}&admin_name={{user_name}}" class="deleteSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color:rgb(255, 255, 0);" title="Remove Creator from Whitelist">
+                                        <img src="../../static/images/whitelist.png" alt="Play" class="musicControl" style="filter:none;height: 70%;">
+                                    </a>
+                                    <a href="/admin-creator-blacklist?creator_id={{i['creator_id']}}&admin_name={{user_name}}" class="flagSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color: #3e3e3e;" title="Blacklist Creator">
+                                        <img src="../../static/images/blacklist.png" alt="Play" class="musicControl" style="height: 70%;">
+                                    </a>
+                                {% else %}
+                                    <a href="/admin-creator-whitelist?creator_id={{i['creator_id']}}&admin_name={{user_name}}" class="deleteSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color:white;" title="Whitelist Creator">
+                                        <img src="../../static/images/whitelist.png" alt="Play" class="musicControl" style="filter:none;height: 70%;">
+                                    </a>
+                                    <a href="/admin-creator-blacklist-remove?creator_id={{i['creator_id']}}&admin_name={{user_name}}" class="flagSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color: rgb(113, 233, 0);" title="Blacklist Creator">
+                                        <img src="../../static/images/blacklist.png" alt="Play" class="musicControl" style="height: 70%;">
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <a href="/admin-creator-whitelist?creator_id={{i['creator_id']}}&admin_name={{user_name}}" class="deleteSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color:white;" title="Whitelist Creator">
+                                    <img src="../../static/images/whitelist.png" alt="Play" class="musicControl" style="filter:none;height: 70%;">
+                                </a>
+                                <a href="/admin-creator-blacklist?creator_id={{i['creator_id']}}&admin_name={{user_name}}" class="flagSong" data-album-id={{i['album_id']}} data-user-name="{{user_name}}" style="background-color: #3e3e3e;" title="Blacklist Creator">
+                                    <img src="../../static/images/blacklist.png" alt="Play" class="musicControl" style="height: 70%;">
+                                </a>
+                            {% endif %}
+
                         </div>
                     </div>
                 {% endfor %}
