@@ -1175,7 +1175,7 @@ def admin_dash(user_name):
 @app.route("/admin/<user_name>/allSongs")
 def admin_songs(user_name):
     songFetcher = f"http://127.0.0.1:5000/api/songs"
-    songData = requests.get(songFetcher).json()
+    songData = requests.get(songFetcher).json()[::-1]
     return render_template("admin_songs.html",allSongs=songData,user_name=user_name)
 
 @app.route("/admin-song-delete")
