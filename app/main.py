@@ -59,7 +59,8 @@ def signin():
 @app.route("/user/<user_name>")
 def home(user_name):
     url = f"http://127.0.0.1:5000/api/songs"
-    response = requests.get(url).json()
+    response = requests.get(url).json()[::-1]
+    
     # user_name = "%20".join(user_name.split(" "))
     playlistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
     playlistData = requests.get(playlistFetcher).json() if requests.get(playlistFetcher).status_code==200 else []

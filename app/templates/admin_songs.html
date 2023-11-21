@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KalpRaag : A Music Screaming Platform</title>
+    <title>KalpRaag - All Songs</title>
     <link rel="stylesheet" href="../../static/styles/index.css">
     <link rel="stylesheet" href="../../static/styles/user.css">
     <link rel="stylesheet" href="../../static/styles/playlist.css">
@@ -76,7 +76,12 @@
                     <div class="music">
                         <div class="musicImg"> {{ i["song_name"][0]|upper }}</div>
                         <div class="musicContent">
-                            <p class="musicName">{{ i["song_name"][0]|upper + i["song_name"][1:]}}</p>
+                            <!-- <p class="musicName">{{ i["song_name"][0]|upper + i["song_name"][1:]}}</p> -->
+                            {% if i["song_name"]|length <18 %}
+                                <p class="musicName">{{ i["song_name"][0]|upper + i["song_name"][1:]}}</p>
+                            {% else %}
+                                <p class="musicName">{{ i["song_name"][0]|upper + i["song_name"][1:18]}}..</p>
+                            {% endif %}
                             <p class="musicDesc">{{ i["artist_id"] }}</p>
                             {% set dur = i["duration"] %}
                             {% set min = (dur//60) %}

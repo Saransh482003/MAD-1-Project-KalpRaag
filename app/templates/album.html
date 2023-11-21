@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KalpRaag : A Music Screaming Platform</title>
+    <title>{{albumData["album_name"][0]|upper()}}{{albumData["album_name"][1:]}} Album</title>
     <link rel="stylesheet" href="../../static/styles/index.css">
     <link rel="stylesheet" href="../../static/styles/user.css">
     <link rel="stylesheet" href="../../static/styles/playlist.css">
@@ -42,7 +42,7 @@
             {% if creator==0 %}
                 <a href="../creator-register?user_name={{user_data['user_name']}}" class="link">Become a Creator</a>
             {% else %}
-                <a href="../creator/{{user_data['user_name']}}?creator_id={{user_data['creator_id']}}" class="link">Creator Mode</a>
+                <a href="../../creator/{{user_data['user_name']}}?creator_id={{user_data['creator_id']}}" class="link">Creator Mode</a>
             {% endif %}
             <a href="/">Logout</a>
         </div>

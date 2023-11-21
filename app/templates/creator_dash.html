@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KalpRaag : A Music Screaming Platform</title>
+    <title>{{user_name}} - Creator Dashboard</title>
     <link rel="stylesheet" href="../../static/styles/index.css">
     <link rel="stylesheet" href="../../static/styles/user.css">
     <link rel="stylesheet" href="../../static/styles/playlist.css">
@@ -199,7 +199,7 @@
             let key = document.getElementById("typeIn").value
             let searchType = document.getElementById("filterList").value
 
-            window.location.href = `/${search.getAttribute("data-user-name")}/search?filter=${searchType}&key=${key}`
+            window.location.href = `/creator/${search.getAttribute("data-user-name")}/search?filter=${searchType}&key=${key}`
         })
     })
     </script>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KalpRaag : A Music Screaming Platform</title>
+    <title>KalpRaag - All Albums</title>
     <link rel="stylesheet" href="../../static/styles/index.css">
     <link rel="stylesheet" href="../../static/styles/user.css">
     <link rel="stylesheet" href="../../static/styles/playlist.css">
@@ -80,7 +80,12 @@
                                 <img src="../../static/images/album.png" class="albumImgAct" alt="">
                             </div>
                             <div class="albumDetails">
-                                <p class="albumName">{{i["album_name"]}}</p>
+                                <!-- <p class="albumName">{{i["album_name"]}}</p> -->
+                                {% if i["user_name"]|length <16 %}
+                                    <p class="albumName">{{i["album_name"]}}</p>
+                                {% else %}
+                                    <p class="albumName">{{i["album_name"][0:15]}}..</p>
+                                {% endif %}
                                 <p class="albumArtist">{{i["artist_id"]}}</p>
                             </div>
                         </a>
