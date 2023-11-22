@@ -50,7 +50,7 @@
     <section id="main">
         <div id="navigator">
             <div id="library">
-                <a href="../{{user_name}}" data-user={{user_name}} id="song_menu" style="text-decoration: none;color: white;font-size: 1.5rem;">Song Menu &nbsp;&#11166;</a>
+                <a href="../{{user_name}}" data-user="{{user_name}}" id="song_menu" style="text-decoration: none;color: white;font-size: 1.5rem;">Song Menu &nbsp;&#11166;</a>
                 <h1>Your Library &nbsp;&#11166;</h1>
                 <a href="../{{user_name}}/liked_songs" class="linkContainer">
                     <img src="../../static/images/full_heart.png" alt="" class="navImgs">
@@ -84,7 +84,7 @@
                         {{response["song_name"]}}
                     {% endif %}
                 </h1>   
-                <div id="musicStats" data-rating={{rating|int}} data-songID={{response["song_id"]}} data-user={{user_name}}>
+                <div id="musicStats" data-rating={{rating|int}} data-songID={{response["song_id"]}} data-user="{{user_name}}">
 
                     {% for rate in range(0,5) %}
                         {% if rate < rating | int %}
@@ -181,7 +181,7 @@
         </div>
         <div id="playBtns">
             <div id="lyricsCont">
-                <div id="lyrics" data-user={{user_name}}>
+                <div id="lyrics" data-user="{{user_name}}">
                     Go Back
                 </div>
             </div>

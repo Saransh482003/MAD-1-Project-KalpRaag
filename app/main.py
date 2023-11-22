@@ -61,7 +61,7 @@ def home(user_name):
     url = f"http://127.0.0.1:5000/api/songs"
     response = requests.get(url).json()[::-1]
     
-    # user_name = "%20".join(user_name.split(" "))
+    # #user_name = "%20".join(user_name.split(" "))
     playlistFetcher = f"http://127.0.0.1:5000/api/playlist?user_name={user_name}"
     playlistData = requests.get(playlistFetcher).json() if requests.get(playlistFetcher).status_code==200 else []
     albumFetcher = f"http://127.0.0.1:5000/api/album?saved_by={user_name}"
@@ -87,6 +87,7 @@ def musicPlayer():
 
 @app.route("/user/<user_name>/lyrics")
 def lyricist(user_name):
+    print(user_name)
     song_id = request.args.get("song_id")
     time = request.args.get("current_time")
     paused = request.args.get("paused")
@@ -96,7 +97,7 @@ def lyricist(user_name):
     lyricsData = requests.get(lyricsFetcher).json()
     f = open(lyricsData["lyrics_path"],"r")
     lines = f.readlines()
-    user_name = "%20".join(user_name.split(" "))
+    #user_name = "%20".join(user_name.split(" "))
     ratingFetcher = f"http://127.0.0.1:5000/api/rating?song_id={song_id}&user_name={user_name}"
     ratingData = requests.get(ratingFetcher)
     if ratingData.status_code==200:
@@ -138,7 +139,7 @@ def update_rating():
     love = request.args.get("love")
     user_name = request.args.get("user_name")
     print(song_id,rating,love,user_name)
-    # user_name = "%20".join(user_name.split(" "))
+    # #user_name = "%20".join(user_name.split(" "))
     url = "http://127.0.0.1:5000/api/rating"
     entry = {
         "song_id":song_id,
@@ -238,7 +239,7 @@ def create_playlist():
         "user_name":user_name,
         "song_ids":"",
     }
-    user_name = "%20".join(user_name.split(" "))
+    #user_name = "%20".join(user_name.split(" "))
     playlist_name = "%20".join(playlist_name.split(" "))
     response = requests.post(url, json=entry)
     if response.status_code==400:
@@ -268,17 +269,17 @@ def add_song_to_playlist():
     url = "http://127.0.0.1:5000/api/playlist"
     # song_ids = playlistData["song_ids"]
     song_ids = playlistData["song_ids"].split(",") if playlistData["song_ids"].split(",")[0]!="" else []
-    
-    if song_ids=="":
-        song_ids+=f"{song_id}"
-    elif song_id in song_ids:
-        song_ids=song_ids
-    else:
-        song_ids+=f",{song_id}"
+    song_ids.append(f"{song_id}")
+    # if song_ids=="":
+    #     song_ids+=f"{song_id}"
+    # elif song_id in song_ids:
+    #     song_ids=song_ids
+    # else:
+    #     song_ids+=f",{song_id}"
     entry = {
         "playlist_name":playlist_name,
         "user_name":user_name,
-        "song_ids":song_ids,
+        "song_ids":",".join(song_ids),
     }
     response = requests.put(url, json=entry)
     if response.status_code==400:
@@ -326,12 +327,12 @@ def album(user_name):
 
     song_ids = allAlbumData["song_ids"].split(",") if allAlbumData["song_ids"].split(",")[0]!="" else []
     songs = []
-    if song_ids != "":
-        for i in song_ids:
-            songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
-            songData = requests.get(songFetcher)
-            if songData.status_code==200:
-                songs.append(songData.json())
+    # if song_ids != "":
+    for i in song_ids:
+        songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
+        songData = requests.get(songFetcher)
+        if songData.status_code==200:
+            songs.append(songData.json())
     # print(songs)
     userFetcher = f"http://127.0.0.1:5000/api/user?user_name={user_name}"
     userData = requests.get(userFetcher).json()
@@ -652,8 +653,8 @@ def creator_dash(user_name):
             return render_template("creator_ban.html",message=messenger,user_data=userData)
     song_ids = creatorData["song_ids"].split(",") if creatorData["song_ids"].split(",")[0]!="" else []
     album_ids = creatorData["album_ids"].split(",") if creatorData["album_ids"].split(",")[0]!="" else []
-    song_count=len(song_ids)
-    album_count=len(album_ids)
+    song_count=0
+    album_count=0
     total_likes=0
     avg_rating=0
     avg_album=0
@@ -675,10 +676,8 @@ def creator_dash(user_name):
                     count_rating+=1
 
     for i in album_ids:
-        print(album_ids,i)
         albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={i}"
         albumData = requests.get(albumFetcher)
-        print(albumData)
         if albumData.status_code==200:
             albumData = albumData.json()
             total_album_saves+=len(albumData["saved_by"].split(",")) if albumData["saved_by"]!="" else 0
@@ -687,6 +686,23 @@ def creator_dash(user_name):
     avg_rating = round(total_rating/count_rating,2) if count_rating!=0 else 0
     avg_album = round(total_album_saves/count_album_saves,2) if count_album_saves!=0 else 0
 
+
+    song_retter = []
+    album_retter = []
+    for i in song_ids:
+        songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
+        songData = requests.get(songFetcher)
+        if songData.status_code==200:
+            song_count+=1
+            song_retter.append(songData.json())
+
+    for i in album_ids:
+        albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={int(i)}"
+        albumData = requests.get(albumFetcher)
+        if albumData.status_code==200:
+            album_count+=1
+            album_retter.append(albumData.json())
+    window = request.args.get("window") if request.args.get("window")!=None else "songs"
     stats={
         "song_count":song_count,
         "album_count":album_count,
@@ -694,21 +710,6 @@ def creator_dash(user_name):
         "avg_rating":avg_rating,
         "avg_album":avg_album,
     }
-    song_retter = []
-    album_retter = []
-    for i in song_ids:
-        songFetcher = f"http://127.0.0.1:5000/api/songs?id={int(i)}"
-        songData = requests.get(songFetcher)
-        if songData.status_code==200:
-            song_retter.append(songData.json())
-
-    for i in album_ids:
-        albumFetcher = f"http://127.0.0.1:5000/api/album?album_id={int(i)}"
-        albumData = requests.get(albumFetcher)
-        if albumData.status_code==200:
-            album_retter.append(albumData.json())
-    window = request.args.get("window") if request.args.get("window")!=None else "songs"
-
     return render_template("creator_dash.html",user_name=user_name,creator=creator,user_data=userData,stats=stats,song_ids=song_retter,album_ids=album_retter,creator_id=creatorData["creator_id"],window=window)
 
 @app.route("/creator/<user_name>/add-song")

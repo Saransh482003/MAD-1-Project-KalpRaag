@@ -159,7 +159,7 @@ input {
     font-family: "Poppins";
     border: none;
     border-bottom: 0.2rem solid black;
-    border-image: linear-gradient(to right, #d700b7, darkorchid) 1;
+    border-image: linear-gradient(to right, #d700b7, #9932cc) 1;
     outline: none;
 }
 
