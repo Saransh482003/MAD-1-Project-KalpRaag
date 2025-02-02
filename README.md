@@ -89,3 +89,5 @@ Developing KalpRaag was an enjoyable and rewarding experience. The project provi
 
 - **Debug Song:** Only one song is loaded in the app for debugging purposes.
 - **How to Run the App:** In the terminal, type `python -m app.main` to run the app as a module.
+
+***Saransh Saini | 22F1001123 | IIT Madras***
